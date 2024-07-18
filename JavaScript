@@ -60,3 +60,4 @@ document.getElementById("culture-form").addEventListener("submit", function(even
     event.preventDefault();
     saveComment("culture");
 });
+
