@@ -155,3 +155,12 @@ footer {
     margin: 10px;
     border: 1px solid #ddd;
 }
+/* ページ全体のフォントと背景 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f0f0;
+    background-image: url('your-background-image.jpg'); /* ここに背景画像のURLを指定します */
+    background-size: cover; /* 画像をウィンドウに合わせてカバーするように設定 */
+    padding: 20px;
+}
