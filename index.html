@@ -126,7 +126,7 @@
 
         // コメントを読み込んで表示する関数
         function loadComments() {
-            commentsRef.once('value', (snapshot) => {
+            commentsRef.on('value', (snapshot) => {
                 const comments = snapshot.val();
                 const commentList = document.getElementById('comment-list');
                 commentList.innerHTML = ''; // コメントリストをクリア
@@ -150,8 +150,6 @@
                     // フォームをクリア
                     document.getElementById('comment-name').value = '';
                     document.getElementById('comment-content').value = '';
-                    // コメント再読み込み
-                    loadComments();
                 })
                 .catch((error) => {
                     console.error('Error adding comment: ', error);
