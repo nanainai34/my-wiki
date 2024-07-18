@@ -30,8 +30,8 @@ window.onload = function() {
     displayPosts("history");
     displayPosts("government");
     displayPosts("culture");
-    // 他のセクションも同様に必要に応じて表示する
-}
+    displayComments();
+};
 
 // 投稿内容を保存するための関数
 function savePost(type) {
@@ -89,30 +89,6 @@ function deletePost(type, index) {
     displayPosts(type);
 }
 
-// フォームの投稿ボタンにイベントリスナーを設定する
-document.getElementById("history-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("history");
-});
-
-document.getElementById("government-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("government");
-});
-
-document.getElementById("culture-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("culture");
-});
-// ページ読み込み時に投稿内容を表示する
-window.onload = function() {
-    displaySection("history");
-    displayPosts("history");
-    displayPosts("government");
-    displayPosts("culture");
-    displayComments();
-};
-
 // コメントを表示する関数
 function displayComments() {
     let comments = JSON.parse(localStorage.getItem("comments")) || [];
@@ -157,3 +133,18 @@ document.getElementById("comment-form").addEventListener("submit", function(even
     saveComment();
 });
 
+// フォームの投稿ボタンにイベントリスナーを設定する
+document.getElementById("history-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("history");
+});
+
+document.getElementById("government-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("government");
+});
+
+document.getElementById("culture-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("culture");
+});
