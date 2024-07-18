@@ -17,8 +17,8 @@ function savePost(type) {
 function displayPosts(type) {
     let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
 
-    let container = document.getElementById(type + "-content");
-    container.innerHTML = ""; // 現在の内容をクリア
+    let panel = document.getElementById(type + "-panel");
+    panel.innerHTML = ""; // 現在の内容をクリア
 
     posts.forEach(post => {
         let postElement = document.createElement("div");
@@ -32,7 +32,7 @@ function displayPosts(type) {
         contentElement.textContent = post.content;
         postElement.appendChild(contentElement);
 
-        container.appendChild(postElement);
+        panel.appendChild(postElement);
     });
 }
 
