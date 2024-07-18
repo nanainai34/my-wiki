@@ -93,41 +93,7 @@
     <footer>
         <p>&copy; 2024 年世界防衛国家連邦架空国家。無断転載を禁じます。</p>
     </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Function to handle form submissions
-            function handleFormSubmit(event, panelId, nameId, commentId) {
-                event.preventDefault();
-                const panel = document.getElementById(panelId);
-                const name = document.getElementById(nameId).value;
-                const comment = document.getElementById(commentId).value;
-                const commentElement = document.createElement("div");
-                commentElement.className = "comment";
-                commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
-                panel.appendChild(commentElement);
-                // Clear the form inputs
-                document.getElementById(nameId).value = "";
-                document.getElementById(commentId).value = "";
-            }
-
-            // Attach form submit event listeners
-            document.getElementById("history-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "history-panel", "history-name", "history-comment");
-            });
-
-            document.getElementById("government-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "government-panel", "government-name", "government-comment");
-            });
-
-            document.getElementById("culture-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "culture-panel", "culture-name", "culture-comment");
-            });
-
-            document.getElementById("comment-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "comment-list", "comment-name", "comment-content");
-            });
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
 
