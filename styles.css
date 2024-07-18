@@ -1,0 +1,93 @@
+/* デフォルトのマージンとパディングをリセットする */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ボディの基本的なスタイル */
+body {
+    font-family: Arial, sans-serif; /* フォントの指定 */
+    line-height: 1.6; /* 行間の設定 */
+    padding: 20px;
+    background-color: #f2f2f2; /* 背景色の設定 */
+    background-image: url('C:/Users/tomom/OneDrive/デスクトップ/世界防衛国連邦wiki/sekaibouekirennpou.png'); /* 背景画像の指定 */
+    background-size: cover; /* 画像を全体に広げる */
+    background-position: center; /* 画像を中央に配置 */
+}
+
+/* ヘッダーのスタイル */
+header {
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ヘッダーコンテンツのスタイル */
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header h1 {
+    font-size: 2.5rem; /* ヘッダーのタイトルのフォントサイズ */
+}
+
+header p {
+    font-size: 1.2rem; /* ヘッダーの説明文のフォントサイズ */
+}
+
+/* ナビゲーションのスタイル */
+nav {
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* ホバー時の背景色 */
+}
+
+/* メインコンテンツのスタイル */
+main {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明の背景色 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+main h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+main p {
+    margin-bottom: 10px;
+}
+
+/* フッターのスタイル */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
+    color: #fff;
+}
