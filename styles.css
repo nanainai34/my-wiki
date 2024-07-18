@@ -3,7 +3,7 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    background-image: url('sekaibouekirennpou.png'); /* 画像ファイルのパスを指定 */
+    background-image: url'sekaibouekirennpou.png'); /* 画像ファイルのパスを指定 */
     background-size: cover; /* 背景画像を全体に表示 */
     background-position: center; /* 背景画像の位置を中央に設定 */
     background-repeat: no-repeat; /* 背景画像が繰り返さないように設定 */
