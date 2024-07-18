@@ -146,3 +146,63 @@ document.getElementById("comment-form").addEventListener("submit", function(even
     event.preventDefault();
     postComment();
 });
+// ページが読み込まれたときに実行される初期化関数
+document.addEventListener('DOMContentLoaded', function() {
+    // サンプルデータを表示する
+    displayHistoryPosts();
+    displayGovernmentPosts();
+    displayCulturePosts();
+    displayPhotoGallery();
+    displayComments();
+
+    // 各フォームの送信イベントを設定する
+    document.getElementById('history-form').addEventListener('submit', addHistoryComment);
+    document.getElementById('government-form').addEventListener('submit', addGovernmentComment);
+    document.getElementById('culture-form').addEventListener('submit', addCultureComment);
+    document.getElementById('photo-form').addEventListener('submit', uploadPhoto);
+    document.getElementById('comment-form').addEventListener('submit', addComment);
+});
+
+// 歴史セクションの投稿を表示する関数
+function displayHistoryPosts() {
+    let historyPanel = document.getElementById('history-panel');
+    historyPanel.innerHTML = '';
+    historyPosts.forEach(post => {
+        let div = document.createElement('div');
+        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
+        historyPanel.appendChild(div);
+    });
+}
+
+// 政府セクションの投稿を表示する関数
+function displayGovernmentPosts() {
+    let governmentPanel = document.getElementById('government-panel');
+    governmentPanel.innerHTML = '';
+    governmentPosts.forEach(post => {
+        let div = document.createElement('div');
+        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
+        governmentPanel.appendChild(div);
+    });
+}
+
+// 文化セクションの投稿を表示する関数
+function displayCulturePosts() {
+    let culturePanel = document.getElementById('culture-panel');
+    culturePanel.innerHTML = '';
+    culturePosts.forEach(post => {
+        let div = document.createElement('div');
+        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
+        culturePanel.appendChild(div);
+    });
+}
+
+// 全体のコメント一覧を表示する関数
+function displayComments() {
+    let commentList = document.getElementById('comment-list');
+    commentList.innerHTML = '';
+    comments.forEach(comment => {
+        let li = document.createElement('li');
+        li.innerHTML = `<strong>${comment.name}</strong>: ${comment.content}`;
+        commentList.appendChild(li);
+    });
+}
