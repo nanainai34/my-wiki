@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>世界防衛国家連邦架空国家 Wiki</title>
+    <title>世界防衛国家連邦政府 Wiki</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -97,69 +97,72 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 年世界防衛国家連邦架空国家。無断転載を禁じます。</p>
+        <p>&copy; 2024 年世界防衛国家連邦政府 Wiki。無断転載を禁じます。</p>
     </footer>
+    <!-- Firebase JavaScript SDK の読み込み -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-analytics.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // ページ読み込み時に保存されたコメントをロードする
-            loadComments();
+        // Firebase の設定情報
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
 
-            // コメントをローカルストレージに保存する関数
-            function saveComment(sectionId, name, comment) {
-                let comments = JSON.parse(localStorage.getItem(sectionId)) || [];
-                comments.push({ name: name, comment: comment });
-                localStorage.setItem(sectionId, JSON.stringify(comments));
-            }
+        // Firebase を初期化
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
 
-            // ローカルストレージからコメントをロードして表示する関数
-            function loadComments() {
-                ['history', 'government', 'culture'].forEach(sectionId => {
-                    let comments = JSON.parse(localStorage.getItem(sectionId)) || [];
-                    let panel = document.getElementById(`${sectionId}-panel`);
-                    panel.innerHTML = ''; // コメントをクリアしてから再描画
-                    comments.forEach(entry => {
-                        let commentElement = document.createElement("div");
-                        commentElement.className = "comment";
-                        commentElement.innerHTML = `<strong>${entry.name}</strong><p>${entry.comment}</p>`;
-                        panel.appendChild(commentElement);
-                    });
+        // Realtime Database の参照を取得
+        const db = firebase.database();
+        const commentsRef = db.ref('comments');
+
+        // コメントを読み込んで表示する関数
+        function loadComments() {
+            commentsRef.once('value', (snapshot) => {
+                const comments = snapshot.val();
+                const commentList = document.getElementById('comment-list');
+                commentList.innerHTML = ''; // コメントリストをクリア
+                for (let key in comments) {
+                    const comment = comments[key];
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
+                    commentList.appendChild(li);
+                }
+            });
+        }
+
+        // コメント投稿フォームの処理
+        const commentForm = document.getElementById('comment-form');
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('comment-name').value;
+            const content = document.getElementById('comment-content').value;
+            commentsRef.push({ name, content })
+                .then(() => {
+                    // フォームをクリア
+                    document.getElementById('comment-name').value = '';
+                    document.getElementById('comment-content').value = '';
+                    // コメント再読み込み
+                    loadComments();
+                })
+                .catch((error) => {
+                    console.error('Error adding comment: ', error);
                 });
-            }
+        });
 
-            // コメントフォームの送信時の処理
-            document.getElementById("history-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "history-panel", "history-name", "history-comment");
-            });
-
-            document.getElementById("government-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "government-panel", "government-name", "government-comment");
-            });
-
-            document.getElementById("culture-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "culture-panel", "culture-name", "culture-comment");
-            });
-
-            document.getElementById("comment-form").addEventListener("submit", function(event) {
-                handleFormSubmit(event, "comment-list", "comment-name", "comment-content");
-            });
-
-            // Function to handle form submissions
-            function handleFormSubmit(event, panelId, nameId, commentId) {
-                event.preventDefault();
-                const panel = document.getElementById(panelId);
-                const name = document.getElementById(nameId).value;
-                const comment = document.getElementById(commentId).value;
-                const commentElement = document.createElement("div");
-                commentElement.className = "comment";
-                commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
-                panel.appendChild(commentElement);
-                // Clear the form inputs
-                document.getElementById(nameId).value = "";
-                document.getElementById(commentId).value = "";
-                // Save the comment to localStorage
-                saveComment(panelId.replace("-panel", ""), name, comment);
-            }
+        // 初期化時にコメントを読み込んで表示
+        document.addEventListener("DOMContentLoaded", function() {
+            loadComments();
         });
     </script>
 </body>
 </html>
+
