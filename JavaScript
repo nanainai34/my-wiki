@@ -1,103 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload and Comments</title>
-</head>
-<body>
-    <h1>File Upload and Comments</h1>
-    <input type="file" id="fileInput">
-    <button onclick="displayFile()">Display File</button>
-    <div id="fileContent"></div>
+// Firebase の設定情報
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASE_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
+};
 
-    <hr>
+// Firebase を初期化
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
-    <h2>Post a Comment</h2>
-    <form id="commentForm">
-        <label for="commentName">Name:</label>
-        <input type="text" id="commentName" required><br><br>
-        <label for="commentContent">Comment:</label><br>
-        <textarea id="commentContent" rows="4" cols="50" required></textarea><br><br>
-        <button type="submit">Post Comment</button>
-    </form>
+// Firebase Realtime Database の参照を取得
+const db = firebase.database();
+const commentsRef = db.ref('comments');
+const photoStorageRef = firebase.storage().ref('photos');
 
-    <ul id="commentList"></ul>
-
-    <!-- Firebase JavaScript SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js"></script>
-    
-    <script>
-        // Firebase の設定
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Firebase の初期化
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // ファイルの表示
-        function displayFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const fileContent = document.getElementById('fileContent');
-                    fileContent.textContent = e.target.result;
-                };
-
-                reader.readAsText(file);
-            } else {
-                alert('No file selected.');
-            }
-        }
-
-        // コメントの投稿
-        document.getElementById('commentForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('commentName').value;
-            const content = document.getElementById('commentContent').value;
-
-            if (name && content) {
-                const comment = { name: name, content: content };
-                saveComment(comment);
-                document.getElementById('commentForm').reset();
-            } else {
-                alert('Please enter both name and comment content.');
-            }
-        });
-
-        // コメントの保存（Firebase に保存）
-        function saveComment(comment) {
-            const commentsRef = database.ref('comments');
-            commentsRef.push(comment);
-        }
-
-        // コメントの表示（Firebase から取得）
-        database.ref('comments').on('child_added', function(data) {
-            const comment = data.val();
-            addComment(comment);
-        });
-
-        // コメントの表示
-        function addComment(comment) {
-            const commentList = document.getElementById('commentList');
+// コメントを読み込んで表示する関数
+function loadComments() {
+    commentsRef.on('value', (snapshot) => {
+        const comments = snapshot.val();
+        const commentList = document.getElementById('comment-list');
+        commentList.innerHTML = ''; // コメントリストをクリア
+        for (let key in comments) {
+            const comment = comments[key];
             const li = document.createElement('li');
-            li.innerHTML = `<strong>${comment.name}</strong>: ${comment.content}`;
+            li.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
             commentList.appendChild(li);
         }
-    </script>
-</body>
-</html>
+    });
+}
+
+// コメント投稿フォームの処理
+const commentForm = document.getElementById('comment-form');
+commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('comment-name').value;
+    const content = document.getElementById('comment-content').value;
+    commentsRef.push({ name, content })
+        .then(() => {
+            // フォームをクリア
+            document.getElementById('comment-name').value = '';
+            document.getElementById('comment-content').value = '';
+        })
+        .catch((error) => {
+            console.error('Error adding comment: ', error);
+        });
+});
+
+// 写真アップロードフォームの処理
+const photoForm = document.getElementById('photo-form');
+photoForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const photoName = document.getElementById('photo-name').value;
+    const photoFile = document.getElementById('photo-file').files[0];
+    if (photoFile) {
+        const uploadTask = photoStorageRef.child(photoFile.name).put(photoFile);
+        uploadTask.on('state_changed', (snapshot) => {
+            // アップロードの進捗を表示
+            console.log('Upload is ' + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '% done');
+        }, (error) => {
+            console.error('Upload failed: ', error);
+        }, () => {
+            // アップロード完了
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                // ギャラリーに写真を追加
+                const photoGallery = document.getElementById('photo-gallery');
+                const img = document.createElement('img');
+                img.src = downloadURL;
+                img.alt = photoName;
+                img.style.width = '200px'; // 画像サイズを調整
+                img.style.margin = '10px';
+                photoGallery.appendChild(img);
+            });
+        });
+    }
+});
+
+// ページが読み込まれたときにコメントを読み込んで表示
+document.addEventListener('DOMContentLoaded', () => {
+    loadComments();
+});
