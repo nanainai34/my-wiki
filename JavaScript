@@ -1,94 +1,3 @@
-// 初期の投稿例を設定する関数
-function setupInitialPosts() {
-    let historyPosts = [
-        { name: "太郎", content: "国家の建国についての初期の投稿です。" },
-        { name: "花子", content: "最初の戦争についての歴史的な出来事を振り返ります。" }
-    ];
-
-    let governmentPosts = [
-        { name: "政治家A", content: "我々の政府の構造についての考察です。" },
-        { name: "政治学者B", content: "政府の権力分散に関する意見を投稿します。" }
-    ];
-
-    let culturePosts = [
-        { name: "文化研究者X", content: "地域ごとの伝統的な祭りについての投稿です。" },
-        { name: "アーティストY", content: "国家の芸術と音楽についての考察を共有します。" }
-    ];
-
-    // 初期の投稿をローカルストレージに保存する
-    localStorage.setItem("history-posts", JSON.stringify(historyPosts));
-    localStorage.setItem("government-posts", JSON.stringify(governmentPosts));
-    localStorage.setItem("culture-posts", JSON.stringify(culturePosts));
-}
-
-// ページ読み込み時に投稿内容を表示する
-window.onload = function() {
-    // 初期の投稿を設定
-    setupInitialPosts();
-
-    // 表示更新
-    displayPosts("history");
-    displayPosts("government");
-    displayPosts("culture");
-    displayComments();
-};
-
-// 投稿内容を保存するための関数
-function savePost(type) {
-    let name = document.getElementById(type + "-name").value;
-    let content = document.getElementById(type + "-content").value;
-
-    // ローカルストレージに保存する場合の例
-    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
-    let post = { name: name, content: content };
-    posts.push(post);
-    localStorage.setItem(type + "-posts", JSON.stringify(posts));
-
-    // 表示更新
-    displayPosts(type);
-}
-
-// 投稿内容を表示するための関数
-function displayPosts(type) {
-    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
-
-    let panel = document.getElementById(type + "-panel");
-    panel.innerHTML = ""; // 現在の内容をクリア
-
-    posts.forEach((post, index) => {
-        let postElement = document.createElement("div");
-        postElement.classList.add("post");
-
-        let nameElement = document.createElement("h3");
-        nameElement.textContent = post.name;
-        postElement.appendChild(nameElement);
-
-        let contentElement = document.createElement("p");
-        contentElement.textContent = post.content;
-        postElement.appendChild(contentElement);
-
-        // 削除ボタンを追加
-        let deleteButton = document.createElement("button");
-        deleteButton.textContent = "削除";
-        deleteButton.addEventListener("click", function() {
-            deletePost(type, index);
-        });
-        postElement.appendChild(deleteButton);
-
-        panel.appendChild(postElement);
-    });
-}
-
-// 投稿内容を削除する関数
-function deletePost(type, index) {
-    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
-    posts.splice(index, 1);
-    localStorage.setItem(type + "-posts", JSON.stringify(posts));
-
-    // 表示更新
-    displayPosts(type);
-}
-
 // コメントを表示する関数
 function displayComments() {
     let comments = JSON.parse(localStorage.getItem("comments")) || [];
@@ -133,18 +42,7 @@ document.getElementById("comment-form").addEventListener("submit", function(even
     saveComment();
 });
 
-// フォームの投稿ボタンにイベントリスナーを設定する
-document.getElementById("history-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("history");
-});
-
-document.getElementById("government-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("government");
-});
-
-document.getElementById("culture-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    savePost("culture");
-});
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displayComments();
+};
