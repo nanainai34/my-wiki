@@ -253,3 +253,50 @@ function submitComment(event) {
 const commentForm = document.getElementById('comment-form');
 commentForm.addEventLis<script src="scripts.js"></script>
 tener('submit', submitComment);
+// Simulated comments data (replace with actual fetching logic)
+const commentsData = [
+    { name: "User 1", content: "コメント1" },
+    { name: "User 2", content: "コメント2" },
+    { name: "User 3", content: "コメント3" }
+];
+
+// Function to display comments dynamically
+function displayComments() {
+    const commentList = document.getElementById('comment-list');
+
+    // Clear existing comments
+    commentList.innerHTML = '';
+
+    // Loop through commentsData and create HTML for each comment
+    commentsData.forEach(comment => {
+        const li = document.createElement('li');
+        li.textContent = `${comment.name}: ${comment.content}`;
+        commentList.appendChild(li);
+    });
+}
+
+// Function to handle comment submission
+function submitComment(event) {
+    event.preventDefault(); // Prevent the form from submitting
+
+    // Get input values
+    const name = document.getElementById('comment-name').value;
+    const content = document.getElementById('comment-content').value;
+
+    // Add the new comment to commentsData
+    commentsData.push({ name: name, content: content });
+
+    // Refresh the displayed comments
+    displayComments();
+
+    // Clear the form inputs
+    document.getElementById('comment-name').value = '';
+    document.getElementById('comment-content').value = '';
+}
+
+// Attach submitComment function to the form submit event
+const commentForm = document.getElementById('comment-form');
+commentForm.addEventListener('submit', submitComment);
+
+// Call the displayComments function initially to load comments
+displayComments();
