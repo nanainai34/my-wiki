@@ -62,4 +62,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     loadComments();
 });
+function displayFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const fileContent = event.target.result;
+            const fileContentDiv = document.getElementById('fileContent');
+            fileContentDiv.innerText = fileContent;
+        };
+
+        reader.readAsText(file);
+    } else {
+        alert("No file selected");
+    }
+}
 
