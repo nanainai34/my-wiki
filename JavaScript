@@ -45,69 +45,10 @@ function displayComments() {
     });
 }
 
-// フォームのコメント投稿ボタンにイベントリスナーを設定する
+// 各フォームのコメント投稿ボタンにイベントリスナーを設定する
 document.getElementById("history-form").addEventListener("submit", function(event) {
     event.preventDefault();
     saveComment("history");
-// ダミーデータの初期化（実際にはデータベースやサーバーに保存する）
-let comments = [];
-
-// コメントの表示を更新する関数
-function updateCommentList() {
-    const commentList = document.getElementById('comment-list');
-    commentList.innerHTML = ''; // コメントリストをクリア
-
-    comments.forEach(comment => {
-        const li = document.createElement('li');
-        const name = document.createElement('strong');
-        name.textContent = comment.name + ': ';
-        const content = document.createElement('span');
-        content.textContent = comment.content;
-        li.appendChild(name);
-        li.appendChild(content);
-        commentList.appendChild(li);
-    });
-}
-
-// コメントフォームの送信を処理する関数
-function submitComment(event) {
-    event.preventDefault();
-    
-    const nameInput = document.getElementById('comment-name');
-    const contentInput = document.getElementById('comment-content');
-    
-    const name = nameInput.value.trim();
-    const content = contentInput.value.trim();
-    
-    if (name === '' || content === '') {
-        alert('名前とコメントを入力してください。');
-        return;
-    }
-    
-    // 新しいコメントオブジェクトを作成
-    const newComment = {
-        name: name,
-        content: content
-    };
-    
-    // ダミーデータにコメントを追加
-    comments.push(newComment);
-    
-    // 入力欄をクリア
-    nameInput.value = '';
-    contentInput.value = '';
-    
-    // コメントリストを更新して表示
-    updateCommentList();
-}
-
-// コメントフォームのイベントリスナーを設定
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventListener('submit', submitComment);
-
-// 初期表示時にコメントリストを更新して表示
-updateCommentList();
-
 });
 
 document.getElementById("government-form").addEventListener("submit", function(event) {
@@ -118,64 +59,4 @@ document.getElementById("government-form").addEventListener("submit", function(e
 document.getElementById("culture-form").addEventListener("submit", function(event) {
     event.preventDefault();
     saveComment("culture");
-// ダミーデータの初期化（実際にはデータベースやサーバーに保存する）
-let comments = [];
-
-// コメントの表示を更新する関数
-function updateCommentList() {
-    const commentList = document.getElementById('comment-list');
-    commentList.innerHTML = ''; // コメントリストをクリア
-
-    comments.forEach(comment => {
-        const li = document.createElement('li');
-        const name = document.createElement('strong');
-        name.textContent = comment.name + ': ';
-        const content = document.createElement('span');
-        content.textContent = comment.content;
-        li.appendChild(name);
-        li.appendChild(content);
-        commentList.appendChild(li);
-    });
-}
-
-// コメントフォームの送信を処理する関数
-function submitComment(event) {
-    event.preventDefault();
-    
-    const nameInput = document.getElementById('comment-name');
-    const contentInput = document.getElementById('comment-content');
-    
-    const name = nameInput.value.trim();
-    const content = contentInput.value.trim();
-    
-    if (name === '' || content === '') {
-        alert('名前とコメントを入力してください。');
-        return;
-    }
-    
-    // 新しいコメントオブジェクトを作成
-    const newComment = {
-        name: name,
-        content: content
-    };
-    
-    // ダミーデータにコメントを追加
-    comments.push(newComment);
-    
-    // 入力欄をクリア
-    nameInput.value = '';
-    contentInput.value = '';
-    
-    // コメントリストを更新して表示
-    updateCommentList();
-}
-
-// コメントフォームのイベントリスナーを設定
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventListener('submit', submitComment);
-
-// 初期表示時にコメントリストを更新して表示
-updateCommentList();
-
 });
-
