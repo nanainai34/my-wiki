@@ -1,5 +1,32 @@
+// 初期の投稿例を設定する関数
+function setupInitialPosts() {
+    let historyPosts = [
+        { name: "太郎", content: "国家の建国についての初期の投稿です。" },
+        { name: "花子", content: "最初の戦争についての歴史的な出来事を振り返ります。" }
+    ];
+
+    let governmentPosts = [
+        { name: "政治家A", content: "我々の政府の構造についての考察です。" },
+        { name: "政治学者B", content: "政府の権力分散に関する意見を投稿します。" }
+    ];
+
+    let culturePosts = [
+        { name: "文化研究者X", content: "地域ごとの伝統的な祭りについての投稿です。" },
+        { name: "アーティストY", content: "国家の芸術と音楽についての考察を共有します。" }
+    ];
+
+    // 初期の投稿をローカルストレージに保存する
+    localStorage.setItem("history-posts", JSON.stringify(historyPosts));
+    localStorage.setItem("government-posts", JSON.stringify(governmentPosts));
+    localStorage.setItem("culture-posts", JSON.stringify(culturePosts));
+}
+
 // ページ読み込み時に投稿内容を表示する
 window.onload = function() {
+    // 初期の投稿を設定
+    setupInitialPosts();
+
+    // 表示更新
     displayPosts("history");
     displayPosts("government");
     displayPosts("culture");
