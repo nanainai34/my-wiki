@@ -31,43 +31,43 @@
         <section id="history" class="content-section">
             <h2>歴史</h2>
             <div id="history-panel" class="panel">
-                <!-- JavaScriptで動的に歴史を表示 -->
+                <!-- JavaScriptで動的に歴史の投稿を表示 -->
             </div>
             <form id="history-form">
-                <h3>歴史を投稿する</h3>
+                <h3>歴史にコメントする</h3>
                 <label for="history-name">名前:</label><br>
                 <input type="text" id="history-name" name="history-name" required><br>
-                <label for="history-content">内容:</label><br>
-                <textarea id="history-content" name="history-content" rows="4" cols="50" required></textarea><br>
-                <button type="submit">投稿する</button>
+                <label for="history-comment">コメント:</label><br>
+                <textarea id="history-comment" name="history-comment" rows="4" cols="50" required></textarea><br>
+                <button type="submit">コメントする</button>
             </form>
         </section>
         <section id="government" class="content-section">
             <h2>政府</h2>
             <div id="government-panel" class="panel">
-                <!-- JavaScriptで動的に政府を表示 -->
+                <!-- JavaScriptで動的に政府の投稿を表示 -->
             </div>
             <form id="government-form">
-                <h3>政府を投稿する</h3>
+                <h3>政府にコメントする</h3>
                 <label for="government-name">名前:</label><br>
                 <input type="text" id="government-name" name="government-name" required><br>
-                <label for="government-content">内容:</label><br>
-                <textarea id="government-content" name="government-content" rows="4" cols="50" required></textarea><br>
-                <button type="submit">投稿する</button>
+                <label for="government-comment">コメント:</label><br>
+                <textarea id="government-comment" name="government-comment" rows="4" cols="50" required></textarea><br>
+                <button type="submit">コメントする</button>
             </form>
         </section>
         <section id="culture" class="content-section">
             <h2>文化</h2>
             <div id="culture-panel" class="panel">
-                <!-- JavaScriptで動的に文化を表示 -->
+                <!-- JavaScriptで動的に文化の投稿を表示 -->
             </div>
             <form id="culture-form">
-                <h3>文化を投稿する</h3>
+                <h3>文化にコメントする</h3>
                 <label for="culture-name">名前:</label><br>
                 <input type="text" id="culture-name" name="culture-name" required><br>
-                <label for="culture-content">内容:</label><br>
-                <textarea id="culture-content" name="culture-content" rows="4" cols="50" required></textarea><br>
-                <button type="submit">投稿する</button>
+                <label for="culture-comment">コメント:</label><br>
+                <textarea id="culture-comment" name="culture-comment" rows="4" cols="50" required></textarea><br>
+                <button type="submit">コメントする</button>
             </form>
         </section>
         <section id="gallery" class="content-section">
@@ -86,8 +86,12 @@
             </div>
         </section>
         <section id="comments" class="content-section">
-            <h2>コメントを投稿する</h2>
+            <h2>コメント一覧</h2>
+            <ul id="comment-list">
+                <!-- JavaScriptで動的にコメントを表示 -->
+            </ul>
             <form id="comment-form">
+                <h3>コメントを投稿する</h3>
                 <label for="comment-name">名前:</label><br>
                 <input type="text" id="comment-name" name="comment-name" required><br>
                 <label for="comment-content">コメント:</label><br>
@@ -95,69 +99,11 @@
                 <button type="submit">投稿する</button>
             </form>
         </section>
-        <section id="display-comments" class="content-section">
-            <h2>投稿されたコメント</h2>
-            <ul id="comment-list">
-                <!-- JavaScriptで動的にコメントが表示される -->
-            </ul>
-        </section>
     </main>
     <footer>
         <p>&copy; 2024 年世界防衛国家連邦架空国家。無断転載を禁じます。</p>
     </footer>
     <script src="scripts.js"></script>
-    <!-- 各セクションにコメント投稿フォームを追加 -->
-<section id="history" class="content-section">
-    <h2>歴史</h2>
-    <div id="history-panel" class="panel">
-        <!-- JavaScriptで動的に歴史の投稿を表示 -->
-    </div>
-    <form id="history-form">
-        <h3>歴史にコメントする</h3>
-        <label for="history-name">名前:</label><br>
-        <input type="text" id="history-name" name="history-name" required><br>
-        <label for="history-comment">コメント:</label><br>
-        <textarea id="history-comment" name="history-comment" rows="4" cols="50" required></textarea><br>
-        <button type="submit">コメントする</button>
-    </form>
-</section>
-
-<section id="government" class="content-section">
-    <h2>政府</h2>
-    <div id="government-panel" class="panel">
-        <!-- JavaScriptで動的に政府の投稿を表示 -->
-    </div>
-    <form id="government-form">
-        <h3>政府にコメントする</h3>
-        <label for="government-name">名前:</label><br>
-        <input type="text" id="government-name" name="government-name" required><br>
-        <label for="government-comment">コメント:</label><br>
-        <textarea id="government-comment" name="government-comment" rows="4" cols="50" required></textarea><br>
-        <button type="submit">コメントする</button>
-    </form>
-</section>
-
-<section id="culture" class="content-section">
-    <h2>文化</h2>
-    <div id="culture-panel" class="panel">
-        <!-- JavaScriptで動的に文化の投稿を表示 -->
-    </div>
-    <form id="culture-form">
-        <h3>文化にコメントする</h3>
-        <label for="culture-name">名前:</label><br>
-        <input type="text" id="culture-name" name="culture-name" required><br>
-        <label for="culture-comment">コメント:</label><br>
-        <textarea id="culture-comment" name="culture-comment" rows="4" cols="50" required></textarea><br>
-        <button type="submit">コメントする</button>
-    </form>
-</section>
-
-<section id="comments" class="content-section">
-    <h2>コメント一覧</h2>
-    <ul id="comment-list">
-        <!-- JavaScriptで動的にコメントを表示 -->
-    </ul>
-</section>
-
 </body>
 </html>
+
