@@ -20,7 +20,7 @@
             <li><a href="#government">政府</a></li>
             <li><a href="#culture">文化</a></li>
             <li><a href="#gallery">ギャラリー</a></li>
-            <li><a href="#comments">コメント</a></li> <!-- コメントセクションへのリンクを追加 -->
+            <li><a href="#comments">コメント</a></li>
         </ul>
     </nav>
     <main>
@@ -34,7 +34,7 @@
                 <!-- JavaScriptで動的に歴史を表示 -->
             </div>
             <form id="history-form">
-                <h3>歴史を知る</h3>
+                <h3>歴史を投稿する</h3>
                 <label for="history-name">名前:</label><br>
                 <input type="text" id="history-name" name="history-name" required><br>
                 <label for="history-content">内容:</label><br>
@@ -48,7 +48,7 @@
                 <!-- JavaScriptで動的に政府を表示 -->
             </div>
             <form id="government-form">
-                <h3>政府を無視</h3>
+                <h3>政府を投稿する</h3>
                 <label for="government-name">名前:</label><br>
                 <input type="text" id="government-name" name="government-name" required><br>
                 <label for="government-content">内容:</label><br>
@@ -60,29 +60,32 @@
             <h2>文化</h2>
             <p>国家文化や伝統について紹介します。</p>
             <form id="culture-form">
-                <h3>文化を意識</h3>
-                <label for="culture-name">タイトル:</label><br>
+                <h3>文化を投稿する</h3>
+                <label for="culture-name">名前:</label><br>
                 <input type="text" id="culture-name" name="culture-name" required><br>
                 <label for="culture-content">内容:</label><br>
                 <textarea id="culture-content" name="culture-content" rows="4" cols="50" required></textarea><br>
                 <button type="submit">投稿する</button>
             </form>
-            <div id="culture-content"></div>
+            <div id="culture-content">
+                <!-- JavaScriptで動的に文化を表示 -->
+            </div>
         </section>
         <section id="gallery">
             <h2>ギャラリー</h2>
             <p>国家の写真やイラストなどを掲載します。</p>
             <form id="photo-form">
                 <h3>写真をアップロードする</h3>
-                <label for="photo-name">タイトル:</label><br>
+                <label for="photo-name">名前:</label><br>
                 <input type="text" id="photo-name" name="photo-name" required><br>
                 <label for="photo-file">ファイルの選択:</label><br>
                 <input type="file" id="photo-file" name="photo-file" accept="image/*" required><br>
                 <button type="submit">アップロードする</button>
             </form>
-            <div id="photo-gallery"></div>
+            <div id="photo-gallery">
+                <!-- JavaScriptで動的に写真を表示 -->
+            </div>
         </section>
-
         <section id="comments">
             <h2>コメントを投稿する</h2>
             <form id="comment-form">
@@ -93,7 +96,6 @@
                 <button type="submit">投稿する</button>
             </form>
         </section>
-
         <section id="display-comments">
             <h2>投稿されたコメント</h2>
             <ul id="comment-list">
@@ -104,7 +106,6 @@
     <footer>
         <p>&copy; 2024 年世界防衛国家連邦架空国家。無断転載を禁じます。</p>
     </footer>
-
-    <script src="scripts.js"></script> <!-- JavaScriptファイルの読み込み -->
+    <script src="scripts.js"></script>
 </body>
 </html>
