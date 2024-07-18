@@ -104,4 +104,56 @@ document.getElementById("culture-form").addEventListener("submit", function(even
     event.preventDefault();
     savePost("culture");
 });
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displaySection("history");
+    displayPosts("history");
+    displayPosts("government");
+    displayPosts("culture");
+    displayComments();
+};
+
+// コメントを表示する関数
+function displayComments() {
+    let comments = JSON.parse(localStorage.getItem("comments")) || [];
+
+    let commentList = document.getElementById("comment-list");
+    commentList.innerHTML = ""; // 現在の内容をクリア
+
+    comments.forEach((comment, index) => {
+        let commentElement = document.createElement("li");
+        commentElement.classList.add("comment");
+
+        let nameElement = document.createElement("strong");
+        nameElement.textContent = comment.name + ": ";
+        commentElement.appendChild(nameElement);
+
+        let contentElement = document.createElement("span");
+        contentElement.textContent = comment.content;
+        commentElement.appendChild(contentElement);
+
+        commentList.appendChild(commentElement);
+    });
+}
+
+// コメントを保存するための関数
+function saveComment() {
+    let name = document.getElementById("comment-name").value;
+    let content = document.getElementById("comment-content").value;
+
+    // ローカルストレージに保存する場合の例
+    let comments = JSON.parse(localStorage.getItem("comments")) || [];
+    let comment = { name: name, content: content };
+    comments.push(comment);
+    localStorage.setItem("comments", JSON.stringify(comments));
+
+    // 表示更新
+    displayComments();
+}
+
+// コメント投稿フォームにイベントリスナーを設定する
+document.getElementById("comment-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    saveComment();
+});
 
