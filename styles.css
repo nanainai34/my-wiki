@@ -88,3 +88,70 @@ footer {
     width: 100%;
     bottom: 0;
 }
+/* 背景画像を全体に適用するスタイル */
+body {
+    background-image: url('path/to/sekaibouekirennpou.png'); /* 画像ファイルのパスを指定 */
+    background-size: cover; /* 背景画像を全体に表示 */
+    background-position: center; /* 背景画像の位置を中央に設定 */
+    background-repeat: no-repeat; /* 背景画像が繰り返さないように設定 */
+    margin: 0; /* ボディの余白を削除 */
+    font-family: Arial, sans-serif; /* フォントの設定（任意） */
+}
+
+/* ヘッダーのスタイル */
+header {
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
+    color: white; /* テキストの色を白に */
+    padding: 10px;
+    text-align: center;
+}
+
+/* ナビゲーションのスタイル */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: white; /* テキストの色を白に */
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* ホバー時に下線を表示 */
+}
+
+/* メインコンテンツのスタイル */
+main {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
+}
+
+/* フッターのスタイル */
+footer {
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+    color: white; /* テキストの色を白に */
+    padding: 10px;
+    text-align: center;
+}
+
+/* コメントパネルのスタイル */
+.panel {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+/* ギャラリー画像のスタイル */
+#photo-gallery img {
+    margin: 10px;
+    border: 1px solid #ddd;
+}
