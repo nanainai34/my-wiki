@@ -24,7 +24,26 @@
 
     <ul id="commentList"></ul>
 
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js"></script>
+    
     <script>
+        // Firebase の設定
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Firebase の初期化
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // ファイルの表示
         function displayFile() {
             const fileInput = document.getElementById('fileInput');
@@ -53,12 +72,23 @@
 
             if (name && content) {
                 const comment = { name: name, content: content };
-                addComment(comment);
                 saveComment(comment);
                 document.getElementById('commentForm').reset();
             } else {
                 alert('Please enter both name and comment content.');
             }
+        });
+
+        // コメントの保存（Firebase に保存）
+        function saveComment(comment) {
+            const commentsRef = database.ref('comments');
+            commentsRef.push(comment);
+        }
+
+        // コメントの表示（Firebase から取得）
+        database.ref('comments').on('child_added', function(data) {
+            const comment = data.val();
+            addComment(comment);
         });
 
         // コメントの表示
@@ -68,21 +98,6 @@
             li.innerHTML = `<strong>${comment.name}</strong>: ${comment.content}`;
             commentList.appendChild(li);
         }
-
-        // コメントの保存
-        function saveComment(comment) {
-            let comments = JSON.parse(localStorage.getItem('comments')) || [];
-            comments.push(comment);
-            localStorage.setItem('comments', JSON.stringify(comments));
-        }
-
-        // ページ読み込み時に保存されたコメントを表示
-        document.addEventListener('DOMContentLoaded', function() {
-            let comments = JSON.parse(localStorage.getItem('comments')) || [];
-            comments.forEach(comment => {
-                addComment(comment);
-            });
-        });
     </script>
 </body>
 </html>
