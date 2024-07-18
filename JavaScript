@@ -1,126 +1,48 @@
-// Firebase の設定情報
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
-};
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コメント機能</title>
+</head>
+<body>
+    <h1>コメント機能</h1>
+    <div id="comments"></div>
+    <form id="comment-form">
+        <label for="comment-name">名前:</label>
+        <input type="text" id="comment-name" name="comment-name" required>
+        <label for="comment-content">コメント:</label>
+        <textarea id="comment-content" name="comment-content" rows="4" required></textarea>
+        <button type="submit">投稿する</button>
+    </form>
 
-// Firebase を初期化
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-
-// Firebase Realtime Database の参照を取得
-const db = firebase.database();
-const commentsRef = db.ref('comments');
-const photoStorageRef = firebase.storage().ref('photos');
-
-// コメントを読み込んで表示する関数
-function loadComments() {
-    commentsRef.on('value', (snapshot) => {
-        const comments = snapshot.val();
-        const commentList = document.getElementById('comment-list');
-        commentList.innerHTML = ''; // コメントリストをクリア
-        for (let key in comments) {
-            const comment = comments[key];
-            const li = document.createElement('li');
-            li.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
-            commentList.appendChild(li);
+    <script>
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('comments')) || [];
+            const commentDiv = document.getElementById('comments');
+            commentDiv.innerHTML = '';
+            comments.forEach(comment => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
+                commentDiv.appendChild(div);
+            });
         }
-    });
-}
 
-// コメント投稿フォームの処理
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('comment-name').value;
-    const content = document.getElementById('comment-content').value;
-    commentsRef.push({ name, content })
-        .then(() => {
-            // フォームをクリア
+        document.addEventListener('DOMContentLoaded', loadComments);
+
+        document.getElementById('comment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('comment-name').value;
+            const content = document.getElementById('comment-content').value;
+
+            const comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.push({ name, content });
+            localStorage.setItem('comments', JSON.stringify(comments));
+
             document.getElementById('comment-name').value = '';
             document.getElementById('comment-content').value = '';
-        })
-        .catch((error) => {
-            console.error('Error adding comment: ', error);
+            loadComments();
         });
-});
-
-// 写真アップロードフォームの処理
-const photoForm = document.getElementById('photo-form');
-photoForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const photoName = document.getElementById('photo-name').value;
-    const photoFile = document.getElementById('photo-file').files[0];
-    if (photoFile) {
-        const uploadTask = photoStorageRef.child(photoFile.name).put(photoFile);
-        uploadTask.on('state_changed', (snapshot) => {
-            // アップロードの進捗を表示
-            console.log('Upload is ' + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '% done');
-        }, (error) => {
-            console.error('Upload failed: ', error);
-        }, () => {
-            // アップロード完了
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                // ギャラリーに写真を追加
-                const photoGallery = document.getElementById('photo-gallery');
-                const img = document.createElement('img');
-                img.src = downloadURL;
-                img.alt = photoName;
-                img.style.width = '200px'; // 画像サイズを調整
-                img.style.margin = '10px';
-                photoGallery.appendChild(img);
-            });
-        });
-    }
-});
-
-// ページが読み込まれたときにコメントを読み込んで表示
-document.addEventListener('DOMContentLoaded', () => {
-    loadComments();
-});
-// コメントをローカルストレージから読み込んで表示する関数
-function loadComments() {
-    const comments = JSON.parse(localStorage.getItem('comments')) || [];
-    const commentList = document.getElementById('comment-list');
-    commentList.innerHTML = ''; // コメントリストをクリア
-    comments.forEach(comment => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
-        commentList.appendChild(li);
-    });
-}
-
-// コメント投稿フォームの処理
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('comment-name').value;
-    const content = document.getElementById('comment-content').value;
-    
-    // ローカルストレージからコメントを取得
-    const comments = JSON.parse(localStorage.getItem('comments')) || [];
-    
-    // 新しいコメントを追加
-    comments.push({ name, content });
-    
-    // ローカルストレージに保存
-    localStorage.setItem('comments', JSON.stringify(comments));
-    
-    // フォームをクリア
-    document.getElementById('comment-name').value = '';
-    document.getElementById('comment-content').value = '';
-    
-    // コメントを再読み込みして表示
-    loadComments();
-});
-
-// ページが読み込まれたときにコメントを読み込んで表示
-document.addEventListener('DOMContentLoaded', () => {
-    loadComments();
-});
+    </script>
+</body>
+</html>
