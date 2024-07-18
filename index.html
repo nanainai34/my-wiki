@@ -30,9 +30,7 @@
         </section>
         <section id="history" class="content-section">
             <h2>歴史</h2>
-            <div id="history-panel" class="panel">
-                <!-- JavaScriptで動的に歴史の投稿を表示 -->
-            </div>
+            <div id="history-panel" class="panel"></div>
             <form id="history-form">
                 <h3>歴史にコメントする</h3>
                 <label for="history-name">名前:</label><br>
@@ -44,9 +42,7 @@
         </section>
         <section id="government" class="content-section">
             <h2>政府</h2>
-            <div id="government-panel" class="panel">
-                <!-- JavaScriptで動的に政府の投稿を表示 -->
-            </div>
+            <div id="government-panel" class="panel"></div>
             <form id="government-form">
                 <h3>政府にコメントする</h3>
                 <label for="government-name">名前:</label><br>
@@ -58,9 +54,7 @@
         </section>
         <section id="culture" class="content-section">
             <h2>文化</h2>
-            <div id="culture-panel" class="panel">
-                <!-- JavaScriptで動的に文化の投稿を表示 -->
-            </div>
+            <div id="culture-panel" class="panel"></div>
             <form id="culture-form">
                 <h3>文化にコメントする</h3>
                 <label for="culture-name">名前:</label><br>
@@ -81,15 +75,11 @@
                 <input type="file" id="photo-file" name="photo-file" accept="image/*" required><br>
                 <button type="submit">アップロードする</button>
             </form>
-            <div id="photo-gallery">
-                <!-- JavaScriptで動的に写真を表示 -->
-            </div>
+            <div id="photo-gallery"></div>
         </section>
         <section id="comments" class="content-section">
             <h2>コメント一覧</h2>
-            <ul id="comment-list">
-                <!-- JavaScriptで動的にコメントを表示 -->
-            </ul>
+            <ul id="comment-list"></ul>
             <form id="comment-form">
                 <h3>コメントを投稿する</h3>
                 <label for="comment-name">名前:</label><br>
@@ -103,7 +93,41 @@
     <footer>
         <p>&copy; 2024 年世界防衛国家連邦架空国家。無断転載を禁じます。</p>
     </footer>
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to handle form submissions
+            function handleFormSubmit(event, panelId, nameId, commentId) {
+                event.preventDefault();
+                const panel = document.getElementById(panelId);
+                const name = document.getElementById(nameId).value;
+                const comment = document.getElementById(commentId).value;
+                const commentElement = document.createElement("div");
+                commentElement.className = "comment";
+                commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
+                panel.appendChild(commentElement);
+                // Clear the form inputs
+                document.getElementById(nameId).value = "";
+                document.getElementById(commentId).value = "";
+            }
+
+            // Attach form submit event listeners
+            document.getElementById("history-form").addEventListener("submit", function(event) {
+                handleFormSubmit(event, "history-panel", "history-name", "history-comment");
+            });
+
+            document.getElementById("government-form").addEventListener("submit", function(event) {
+                handleFormSubmit(event, "government-panel", "government-name", "government-comment");
+            });
+
+            document.getElementById("culture-form").addEventListener("submit", function(event) {
+                handleFormSubmit(event, "culture-panel", "culture-name", "culture-comment");
+            });
+
+            document.getElementById("comment-form").addEventListener("submit", function(event) {
+                handleFormSubmit(event, "comment-list", "comment-name", "comment-content");
+            });
+        });
+    </script>
 </body>
 </html>
 
