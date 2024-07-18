@@ -1,93 +1,97 @@
-/* デフォルトのマージンとパディングをリセットする */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displaySection("history");
+};
+
+// セクションを切り替える関数
+function displaySection(sectionId) {
+    // 全てのコンテンツセクションを非表示にする
+    let sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // 指定されたセクションを表示する
+    document.getElementById(sectionId).style.display = 'block';
 }
 
-/* ボディの基本的なスタイル */
-body {
-    font-family: Arial, sans-serif; /* フォントの指定 */
-    line-height: 1.6; /* 行間の設定 */
-    padding: 20px;
-    background-color: #f2f2f2; /* 背景色の設定 */
-    background-image: url('C:/Users/tomom/OneDrive/デスクトップ/世界防衛国連邦wiki/sekaibouekirennpou.png'); /* 背景画像の指定 */
-    background-size: cover; /* 画像を全体に広げる */
-    background-position: center; /* 画像を中央に配置 */
+// 投稿内容を保存するための関数
+function savePost(type) {
+    let name = document.getElementById(type + "-name").value;
+    let content = document.getElementById(type + "-content").value;
+
+    // ローカルストレージに保存する場合の例
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+    let post = { name: name, content: content };
+    posts.push(post);
+    localStorage.setItem(type + "-posts", JSON.stringify(posts));
+
+    // 表示更新
+    displayPosts(type);
 }
 
-/* ヘッダーのスタイル */
-header {
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
-    color: #fff;
-    text-align: center;
-    padding: 20px;
+// 投稿内容を表示するための関数
+function displayPosts(type) {
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+
+    let panel = document.getElementById(type + "-panel");
+    panel.innerHTML = ""; // 現在の内容をクリア
+
+    posts.forEach((post, index) => {
+        let postElement = document.createElement("div");
+        postElement.classList.add("post");
+
+        let nameElement = document.createElement("h3");
+        nameElement.textContent = post.name;
+        postElement.appendChild(nameElement);
+
+        let contentElement = document.createElement("p");
+        contentElement.textContent = post.content;
+        postElement.appendChild(contentElement);
+
+        // 削除ボタンを追加
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "削除";
+        deleteButton.addEventListener("click", function() {
+            deletePost(type, index);
+        });
+        postElement.appendChild(deleteButton);
+
+        panel.appendChild(postElement);
+    });
 }
 
-/* ヘッダーコンテンツのスタイル */
-.header-content {
-    max-width: 800px;
-    margin: 0 auto;
+// 投稿内容を削除する関数
+function deletePost(type, index) {
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+    posts.splice(index, 1);
+    localStorage.setItem(type + "-posts", JSON.stringify(posts));
+
+    // 表示更新
+    displayPosts(type);
 }
 
-header h1 {
-    font-size: 2.5rem; /* ヘッダーのタイトルのフォントサイズ */
-}
+// フォームの投稿ボタンにイベントリスナーを設定する
+document.getElementById("history-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("history");
+});
 
-header p {
-    font-size: 1.2rem; /* ヘッダーの説明文のフォントサイズ */
-}
+document.getElementById("government-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("government");
+});
 
-/* ナビゲーションのスタイル */
-nav {
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
-    padding: 10px;
-}
+document.getElementById("culture-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("culture");
+});
 
-nav ul {
-    list-style-type: none;
-    text-align: center;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 10px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-nav ul li a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* ホバー時の背景色 */
-}
-
-/* メインコンテンツのスタイル */
-main {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9); /* 半透明の背景色 */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-main h2 {
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-}
-
-main p {
-    margin-bottom: 10px;
-}
-
-/* フッターのスタイル */
-footer {
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景色 */
-    color: #fff;
-}
+// 各セクションのリンクをクリックしたときの挙動を設定する
+document.querySelectorAll("nav ul li a").forEach(link => {
+    link.addEventListener("click", function(event) {
+        event.preventDefault();
+        let sectionId = this.getAttribute("href").substring(1);
+        displaySection(sectionId);
+    });
+});
