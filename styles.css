@@ -244,3 +244,10 @@ footer {
     width: 200px;
     margin: 0.5rem;
 }
+/* styles.css */
+.panel {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
