@@ -84,3 +84,43 @@ photoForm.addEventListener('submit', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     loadComments();
 });
+// コメントをローカルストレージから読み込んで表示する関数
+function loadComments() {
+    const comments = JSON.parse(localStorage.getItem('comments')) || [];
+    const commentList = document.getElementById('comment-list');
+    commentList.innerHTML = ''; // コメントリストをクリア
+    comments.forEach(comment => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
+        commentList.appendChild(li);
+    });
+}
+
+// コメント投稿フォームの処理
+const commentForm = document.getElementById('comment-form');
+commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('comment-name').value;
+    const content = document.getElementById('comment-content').value;
+    
+    // ローカルストレージからコメントを取得
+    const comments = JSON.parse(localStorage.getItem('comments')) || [];
+    
+    // 新しいコメントを追加
+    comments.push({ name, content });
+    
+    // ローカルストレージに保存
+    localStorage.setItem('comments', JSON.stringify(comments));
+    
+    // フォームをクリア
+    document.getElementById('comment-name').value = '';
+    document.getElementById('comment-content').value = '';
+    
+    // コメントを再読み込みして表示
+    loadComments();
+});
+
+// ページが読み込まれたときにコメントを読み込んで表示
+document.addEventListener('DOMContentLoaded', () => {
+    loadComments();
+});
