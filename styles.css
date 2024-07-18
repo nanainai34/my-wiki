@@ -95,3 +95,9 @@ document.querySelectorAll("nav ul li a").forEach(link => {
         displaySection(sectionId);
     });
 });
+.comment {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
