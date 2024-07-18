@@ -1,0 +1,61 @@
+// 投稿内容を保存するための関数
+function savePost(type) {
+    let name = document.getElementById(type + "-name").value;
+    let content = document.getElementById(type + "-content").value;
+
+    // ローカルストレージに保存する場合の例
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+    let post = { name: name, content: content };
+    posts.push(post);
+    localStorage.setItem(type + "-posts", JSON.stringify(posts));
+
+    // 表示更新
+    displayPosts(type);
+}
+
+// 投稿内容を表示するための関数
+function displayPosts(type) {
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+
+    let container = document.getElementById(type + "-content");
+    container.innerHTML = ""; // 現在の内容をクリア
+
+    posts.forEach(post => {
+        let postElement = document.createElement("div");
+        postElement.classList.add("post");
+
+        let nameElement = document.createElement("h3");
+        nameElement.textContent = post.name;
+        postElement.appendChild(nameElement);
+
+        let contentElement = document.createElement("p");
+        contentElement.textContent = post.content;
+        postElement.appendChild(contentElement);
+
+        container.appendChild(postElement);
+    });
+}
+
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displayPosts("history");
+    displayPosts("government");
+    displayPosts("culture");
+    // 他のセクションも同様に必要に応じて表示する
+}
+
+// フォームの投稿ボタンにイベントリスナーを設定する
+document.getElementById("history-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("history");
+});
+
+document.getElementById("government-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("government");
+});
+
+document.getElementById("culture-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    savePost("culture");
+});
