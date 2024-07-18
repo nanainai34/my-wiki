@@ -30,7 +30,7 @@
         </section>
         <section id="history">
             <h2>歴史</h2>
-            <div id="history-content">
+            <div id="history-panel" class="panel">
                 <!-- JavaScriptで動的に歴史を表示 -->
             </div>
             <form id="history-form">
@@ -44,7 +44,7 @@
         </section>
         <section id="government">
             <h2>政府</h2>
-            <div id="government-content">
+            <div id="government-panel" class="panel">
                 <!-- JavaScriptで動的に政府を表示 -->
             </div>
             <form id="government-form">
@@ -58,7 +58,9 @@
         </section>
         <section id="culture">
             <h2>文化</h2>
-            <p>国家文化や伝統について紹介します。</p>
+            <div id="culture-panel" class="panel">
+                <!-- JavaScriptで動的に文化を表示 -->
+            </div>
             <form id="culture-form">
                 <h3>文化を投稿する</h3>
                 <label for="culture-name">名前:</label><br>
@@ -67,9 +69,6 @@
                 <textarea id="culture-content" name="culture-content" rows="4" cols="50" required></textarea><br>
                 <button type="submit">投稿する</button>
             </form>
-            <div id="culture-content">
-                <!-- JavaScriptで動的に文化を表示 -->
-            </div>
         </section>
         <section id="gallery">
             <h2>ギャラリー</h2>
@@ -109,3 +108,4 @@
     <script src="scripts.js"></script>
 </body>
 </html>
+
