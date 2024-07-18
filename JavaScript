@@ -1,3 +1,11 @@
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displayPosts("history");
+    displayPosts("government");
+    displayPosts("culture");
+    // 他のセクションも同様に必要に応じて表示する
+}
+
 // 投稿内容を保存するための関数
 function savePost(type) {
     let name = document.getElementById(type + "-name").value;
@@ -20,7 +28,7 @@ function displayPosts(type) {
     let panel = document.getElementById(type + "-panel");
     panel.innerHTML = ""; // 現在の内容をクリア
 
-    posts.forEach(post => {
+    posts.forEach((post, index) => {
         let postElement = document.createElement("div");
         postElement.classList.add("post");
 
@@ -32,16 +40,26 @@ function displayPosts(type) {
         contentElement.textContent = post.content;
         postElement.appendChild(contentElement);
 
+        // 削除ボタンを追加
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "削除";
+        deleteButton.addEventListener("click", function() {
+            deletePost(type, index);
+        });
+        postElement.appendChild(deleteButton);
+
         panel.appendChild(postElement);
     });
 }
 
-// ページ読み込み時に投稿内容を表示する
-window.onload = function() {
-    displayPosts("history");
-    displayPosts("government");
-    displayPosts("culture");
-    // 他のセクションも同様に必要に応じて表示する
+// 投稿内容を削除する関数
+function deletePost(type, index) {
+    let posts = JSON.parse(localStorage.getItem(type + "-posts")) || [];
+    posts.splice(index, 1);
+    localStorage.setItem(type + "-posts", JSON.stringify(posts));
+
+    // 表示更新
+    displayPosts(type);
 }
 
 // フォームの投稿ボタンにイベントリスナーを設定する
@@ -59,3 +77,4 @@ document.getElementById("culture-form").addEventListener("submit", function(even
     event.preventDefault();
     savePost("culture");
 });
+
