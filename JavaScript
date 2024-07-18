@@ -3,505 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload and Display</title>
+    <title>File Upload and Comments</title>
 </head>
 <body>
-    <h1>Upload a File</h1>
+    <h1>File Upload and Comments</h1>
     <input type="file" id="fileInput">
     <button onclick="displayFile()">Display File</button>
     <div id="fileContent"></div>
 
-    <script src="script.js"></script>
+    <hr>
+
+    <h2>Post a Comment</h2>
+    <form id="commentForm">
+        <label for="commentName">Name:</label>
+        <input type="text" id="commentName" required><br><br>
+        <label for="commentContent">Comment:</label><br>
+        <textarea id="commentContent" rows="4" cols="50" required></textarea><br><br>
+        <button type="submit">Post Comment</button>
+    </form>
+
+    <ul id="commentList"></ul>
+
+    <script>
+        // ファイルの表示
+        function displayFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const fileContent = document.getElementById('fileContent');
+                    fileContent.textContent = e.target.result;
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert('No file selected.');
+            }
+        }
+
+        // コメントの投稿
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('commentName').value;
+            const content = document.getElementById('commentContent').value;
+
+            if (name && content) {
+                const comment = { name: name, content: content };
+                addComment(comment);
+                saveComment(comment);
+                document.getElementById('commentForm').reset();
+            } else {
+                alert('Please enter both name and comment content.');
+            }
+        });
+
+        // コメントの表示
+        function addComment(comment) {
+            const commentList = document.getElementById('commentList');
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${comment.name}</strong>: ${comment.content}`;
+            commentList.appendChild(li);
+        }
+
+        // コメントの保存
+        function saveComment(comment) {
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.push(comment);
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        // ページ読み込み時に保存されたコメントを表示
+        document.addEventListener('DOMContentLoaded', function() {
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.forEach(comment => {
+                addComment(comment);
+            });
+        });
+    </script>
 </body>
 </html>
-// ページ読み込み時に投稿内容を表示する
-window.onload = function() {
-    displaySection("history");
-    displaySection("government");
-    displaySection("culture");
-    displayComments();
-};
-
-// セクションを切り替える関数
-function displaySection(sectionId) {
-    let sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
-    document.getElementById(sectionId).style.display = 'block';
-}
-
-// 投稿内容を保存する関数
-function saveComment(sectionId) {
-    let name = document.getElementById(sectionId + "-name").value;
-    let comment = document.getElementById(sectionId + "-comment").value;
-
-    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
-    let newComment = { name: name, comment: comment };
-    comments.push(newComment);
-    localStorage.setItem(sectionId + "-comments", JSON.stringify(comments));
-
-    // 表示更新
-    displayComments();
-}
-
-// 投稿内容を表示する関数
-function displayComments() {
-    let commentList = document.getElementById("comment-list");
-    commentList.innerHTML = ""; // 現在の内容をクリア
-
-    // 各セクションのコメントを取得して表示
-    ["history", "government", "culture"].forEach(sectionId => {
-        let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
-        comments.forEach(comment => {
-            let listItem = document.createElement("li");
-            listItem.textContent = `${comment.name}: ${comment.comment}`;
-            commentList.appendChild(listItem);
-        });
-    });
-}
-
-// 各フォームのコメント投稿ボタンにイベントリスナーを設定する
-document.getElementById("history-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    saveComment("history");
-});
-
-document.getElementById("government-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    saveComment("government");
-});
-
-document.getElementById("culture-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    saveComment("culture");
-});
-// コメントを保存する関数
-function saveComment(sectionId) {
-    let name = document.getElementById(sectionId + "-name").value;
-    let comment = document.getElementById(sectionId + "-comment").value;
-
-    // ローカルストレージに保存する例
-    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
-    let newComment = { name: name, comment: comment };
-    comments.push(newComment);
-    localStorage.setItem(sectionId + "-comments", JSON.stringify(comments));
-
-    // コメントを表示する
-    displayComments(sectionId);
-}
-
-// コメントを表示する関数
-function displayComments(sectionId) {
-    let commentList = document.createElement("ul");
-    commentList.id = sectionId + "-comment-list";
-    let panel = document.getElementById(sectionId + "-panel");
-    panel.innerHTML = ""; // コメントをクリア
-
-    // ローカルストレージからコメントを取得して表示
-    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
-    comments.forEach(comment => {
-        let listItem = document.createElement("li");
-        listItem.textContent = `${comment.name}: ${comment.comment}`;
-        commentList.appendChild(listItem);
-    });
-
-    panel.appendChild(commentList); // コメントリストを追加
-}
-
-// フォームの送信イベントリスナーを設定する関数
-function setupFormSubmit(formId, sectionId) {
-    document.getElementById(formId).addEventListener("submit", function(event) {
-        event.preventDefault();
-        saveComment(sectionId);
-    });
-}
-
-// 各セクションのコメントフォームに送信イベントリスナーを設定
-setupFormSubmit("history-form", "history");
-setupFormSubmit("government-form", "government");
-setupFormSubmit("culture-form", "culture");
-
-// 画像をアップロードする関数
-function uploadPhoto() {
-    let name = document.getElementById("photo-name").value;
-    let file = document.getElementById("photo-file").files[0];
-
-    // サーバーサイドにファイルをアップロードする処理を実装する必要があります
-
-    // アップロードした画像を表示する（仮の表示方法）
-    let photoGallery = document.getElementById("photo-gallery");
-    let img = document.createElement("img");
-    img.src = URL.createObjectURL(file);
-    img.alt = name;
-    photoGallery.appendChild(img);
-}
-
-// フォームの送信イベントリスナーを設定（写真のアップロード）
-document.getElementById("photo-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    uploadPhoto();
-});
-
-// コメントを投稿する関数
-function postComment() {
-    let name = document.getElementById("comment-name").value;
-    let comment = document.getElementById("comment-content").value;
-
-    // サーバーサイドでコメントを保存する処理を実装する必要があります
-
-    // 投稿したコメントを表示する（仮の表示方法）
-    let commentList = document.getElementById("comment-list");
-    let listItem = document.createElement("li");
-    listItem.textContent = `${name}: ${comment}`;
-    commentList.appendChild(listItem);
-}
-
-// フォームの送信イベントリスナーを設定（コメントを投稿）
-document.getElementById("comment-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    postComment();
-});
-// ページが読み込まれたときに実行される初期化関数
-document.addEventListener('DOMContentLoaded', function() {
-    // サンプルデータを表示する
-    displayHistoryPosts();
-    displayGovernmentPosts();
-    displayCulturePosts();
-    displayPhotoGallery();
-    displayComments();
-
-    // 各フォームの送信イベントを設定する
-    document.getElementById('history-form').addEventListener('submit', addHistoryComment);
-    document.getElementById('government-form').addEventListener('submit', addGovernmentComment);
-    document.getElementById('culture-form').addEventListener('submit', addCultureComment);
-    document.getElementById('photo-form').addEventListener('submit', uploadPhoto);
-    document.getElementById('comment-form').addEventListener('submit', addComment);
-});
-
-// 歴史セクションの投稿を表示する関数
-function displayHistoryPosts() {
-    let historyPanel = document.getElementById('history-panel');
-    historyPanel.innerHTML = '';
-    historyPosts.forEach(post => {
-        let div = document.createElement('div');
-        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
-        historyPanel.appendChild(div);
-    });
-}
-
-// 政府セクションの投稿を表示する関数
-function displayGovernmentPosts() {
-    let governmentPanel = document.getElementById('government-panel');
-    governmentPanel.innerHTML = '';
-    governmentPosts.forEach(post => {
-        let div = document.createElement('div');
-        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
-        governmentPanel.appendChild(div);
-    });
-}
-
-// 文化セクションの投稿を表示する関数
-function displayCulturePosts() {
-    let culturePanel = document.getElementById('culture-panel');
-    culturePanel.innerHTML = '';
-    culturePosts.forEach(post => {
-        let div = document.createElement('div');
-        div.innerHTML = `<p><strong>${post.name}</strong>: ${post.comment}</p>`;
-        culturePanel.appendChild(div);
-    });
-}
-
-// 全体のコメント一覧を表示する関数
-function displayComments() {
-    let commentList = document.getElementById('comment-list');
-    commentList.innerHTML = '';
-    comments.forEach(comment => {
-        let li = document.createElement('li');
-        li.innerHTML = `<strong>${comment.name}</strong>: ${comment.content}`;
-        commentList.appendChild(li);
-    });
-}
-// Simulated comments data (replace with actual fetching logic)
-const commentsData = [
-    { name: "User 1", content: "コメント1" },
-    { name: "User 2", content: "コメント2" },
-    { name: "User 3", content: "コメント3" }
-];
-
-// Function to display comments dynamically
-function displayComments() {
-    const commentList = document.getElementById('comment-list');
-
-    // Clear existing comments
-    commentList.innerHTML = '';
-
-    // Loop through commentsData and create HTML for each comment
-    commentsData.forEach(comment => {
-        const li = document.createElement('li');
-        li.textContent = `${comment.name}: ${comment.content}`;
-        commentList.appendChild(li);
-    });
-}
-
-// Call the displayComments function initially to load comments
-displayComments();
-// Function to handle comment submission
-function submitComment(event) {
-    event.preventDefault(); // Prevent the form from submitting
-
-    // Get input values
-    const name = document.getElementById('comment-name').value;
-    const content = document.getElementById('comment-content').value;
-
-    // Add the new comment to commentsData
-    commentsData.push({ name: name, content: content });
-
-    // Refresh the displayed comments
-    displayComments();
-
-    // Clear the form inputs
-    document.getElementById('comment-name').value = '';
-    document.getElementById('comment-content').value = '';
-}
-
-// Attach submitComment function to the form submit event
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventLis<script src="scripts.js"></script>
-tener('submit', submitComment);
-// Simulated comments data (replace with actual fetching logic)
-const commentsData = [
-    { name: "User 1", content: "コメント1" },
-    { name: "User 2", content: "コメント2" },
-    { name: "User 3", content: "コメント3" }
-];
-
-// Function to display comments dynamically
-function displayComments() {
-    const commentList = document.getElementById('comment-list');
-
-    // Clear existing comments
-    commentList.innerHTML = '';
-
-    // Loop through commentsData and create HTML for each comment
-    commentsData.forEach(comment => {
-        const li = document.createElement('li');
-        li.textContent = `${comment.name}: ${comment.content}`;
-        commentList.appendChild(li);
-    });
-}
-
-// Function to handle comment submission
-function submitComment(event) {
-    event.preventDefault(); // Prevent the form from submitting
-
-    // Get input values
-    const name = document.getElementById('comment-name').value;
-    const content = document.getElementById('comment-content').value;
-
-    // Add the new comment to commentsData
-    commentsData.push({ name: name, content: content });
-
-    // Refresh the displayed comments
-    displayComments();
-
-    // Clear the form inputs
-    document.getElementById('comment-name').value = '';
-    document.getElementById('comment-content').value = '';
-}
-
-// Attach submitComment function to the form submit event
-const commentForm = document.getElementById('comment-form');
-commentForm.addEventListener('submit', submitComment);
-
-// Call the displayComments function initially to load comments
-displayComments();
-document.addEventListener("DOMContentLoaded", function() {
-    // Load comments from the server
-    function loadComments() {
-        fetch('/comments')
-            .then(response => response.json())
-            .then(data => {
-                displayComments('history-panel', data.history);
-                displayComments('government-panel', data.government);
-                displayComments('culture-panel', data.culture);
-                displayComments('comment-list', data.general);
-            });
-    }
-
-    // Display comments in the specified panel
-    function displayComments(panelId, comments) {
-        const panel = document.getElementById(panelId);
-        panel.innerHTML = '';
-        comments.forEach(comment => {
-            const commentElement = document.createElement("div");
-            commentElement.className = "comment";
-            commentElement.innerHTML = `<strong>${comment.name}</strong><p>${comment.comment}</p>`;
-            panel.appendChild(commentElement);
-        });
-    }
-
-    // Handle form submissions
-    function handleFormSubmit(event, section) {
-        event.preventDefault();
-        const name = event.target.querySelector('input[type="text"]').value;
-        const comment = event.target.querySelector('textarea').value;
-        fetch('/comments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ section, name, comment }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            loadComments();
-            event.target.reset();
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    document.getElementById("history-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'history');
-    });
-
-    document.getElementById("government-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'government');
-    });
-
-    document.getElementById("culture-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'culture');
-    });
-
-    document.getElementById("comment-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'general');
-    });
-
-    loadComments();
-});
-document.addEventListener("DOMContentLoaded", function() {
-    // Load comments from the server
-    function loadComments() {
-        fetch('/comments')
-            .then(response => response.json())
-            .then(data => {
-                displayComments('history-panel', data.history);
-                displayComments('government-panel', data.government);
-                displayComments('culture-panel', data.culture);
-                displayComments('comment-list', data.general);
-            });
-    }
-
-    // Display comments in the specified panel
-    function displayComments(panelId, comments) {
-        const panel = document.getElementById(panelId);
-        panel.innerHTML = '';
-        comments.forEach(comment => {
-            const commentElement = document.createElement("div");
-            commentElement.className = "comment";
-            commentElement.innerHTML = `<strong>${comment.name}</strong><p>${comment.comment}</p>`;
-            panel.appendChild(commentElement);
-        });
-    }
-
-    // Handle form submissions
-    function handleFormSubmit(event, section) {
-        event.preventDefault();
-        const name = event.target.querySelector('input[type="text"]').value;
-        const comment = event.target.querySelector('textarea').value;
-        fetch('/comments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ section, name, comment }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            loadComments();
-            event.target.reset();
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    document.getElementById("history-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'history');
-    });
-
-    document.getElementById("government-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'government');
-    });
-
-    document.getElementById("culture-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'culture');
-    });
-
-    document.getElementById("comment-form").addEventListener("submit", function(event) {
-        handleFormSubmit(event, 'general');
-    });
-
-    loadComments();
-});
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Function to handle form submissions
-        function handleFormSubmit(event, panelId, nameId, commentId, storageKey) {
-            event.preventDefault();
-            const panel = document.getElementById(panelId);
-            const name = document.getElementById(nameId).value;
-            const comment = document.getElementById(commentId).value;
-
-            // Create a new comment element
-            const commentElement = document.createElement("div");
-            commentElement.className = "comment";
-            commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
-
-            // Append the new comment to the panel
-            panel.appendChild(commentElement);
-
-            // Save the comment to localStorage
-            const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
-            comments.push({ name: name, comment: comment });
-            localStorage.setItem(storageKey, JSON.stringify(comments));
-
-            // Clear the form inputs
-            document.getElementById(nameId).value = "";
-            document.getElementById(commentId).value = "";
-        }
-
-        // Function to load comments from localStorage
-        function loadComments(panelId, storageKey) {
-            const panel = document.getElementById(panelId);
-            const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
-            comments.forEach(({ name, comment }) => {
-                const commentElement = document.createElement("div");
-                commentElement.className = "comment";
-                commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
-                panel.appendChild(commentElement);
-            });
-        }
-
-        // Attach form submit event listeners
-        document.getElementById("history-form").addEventListener("submit", function(event) {
-            handleFormSubmit(event, "history-panel", "history-name", "history-comment", "historyComments");
-        });
-
-        document.getElementById("government-form").addEventListener("submit", function(event) {
-            handleFormSubmit(event, "government-panel", "government-name", "government-comment", "governmentComments");
-        });
-
-        document.getElementById("culture-form").addEventListener("submit", function(event) {
-            handleFormSubmit(event, "culture-panel", "culture-name", "culture-comment", "cultureComments");
-        });
-
-        document.getElementById("comment-form").addEventListener("submit", function(event) {
-            handleFormSubmit(event, "comment-list", "comment-name", "comment-content", "generalComments");
-        });
-
-        // Load comments from localStorage on page load
-        loadComments("history-panel", "historyComments");
-        loadComments("government-panel", "governmentComments");
-        loadComments("culture-panel", "cultureComments");
-        loadComments("comment-list", "generalComments");
-    });
-</script>
