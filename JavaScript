@@ -60,3 +60,89 @@ document.getElementById("culture-form").addEventListener("submit", function(even
     event.preventDefault();
     saveComment("culture");
 });
+// コメントを保存する関数
+function saveComment(sectionId) {
+    let name = document.getElementById(sectionId + "-name").value;
+    let comment = document.getElementById(sectionId + "-comment").value;
+
+    // ローカルストレージに保存する例
+    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
+    let newComment = { name: name, comment: comment };
+    comments.push(newComment);
+    localStorage.setItem(sectionId + "-comments", JSON.stringify(comments));
+
+    // コメントを表示する
+    displayComments(sectionId);
+}
+
+// コメントを表示する関数
+function displayComments(sectionId) {
+    let commentList = document.createElement("ul");
+    commentList.id = sectionId + "-comment-list";
+    let panel = document.getElementById(sectionId + "-panel");
+    panel.innerHTML = ""; // コメントをクリア
+
+    // ローカルストレージからコメントを取得して表示
+    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
+    comments.forEach(comment => {
+        let listItem = document.createElement("li");
+        listItem.textContent = `${comment.name}: ${comment.comment}`;
+        commentList.appendChild(listItem);
+    });
+
+    panel.appendChild(commentList); // コメントリストを追加
+}
+
+// フォームの送信イベントリスナーを設定する関数
+function setupFormSubmit(formId, sectionId) {
+    document.getElementById(formId).addEventListener("submit", function(event) {
+        event.preventDefault();
+        saveComment(sectionId);
+    });
+}
+
+// 各セクションのコメントフォームに送信イベントリスナーを設定
+setupFormSubmit("history-form", "history");
+setupFormSubmit("government-form", "government");
+setupFormSubmit("culture-form", "culture");
+
+// 画像をアップロードする関数
+function uploadPhoto() {
+    let name = document.getElementById("photo-name").value;
+    let file = document.getElementById("photo-file").files[0];
+
+    // サーバーサイドにファイルをアップロードする処理を実装する必要があります
+
+    // アップロードした画像を表示する（仮の表示方法）
+    let photoGallery = document.getElementById("photo-gallery");
+    let img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    img.alt = name;
+    photoGallery.appendChild(img);
+}
+
+// フォームの送信イベントリスナーを設定（写真のアップロード）
+document.getElementById("photo-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    uploadPhoto();
+});
+
+// コメントを投稿する関数
+function postComment() {
+    let name = document.getElementById("comment-name").value;
+    let comment = document.getElementById("comment-content").value;
+
+    // サーバーサイドでコメントを保存する処理を実装する必要があります
+
+    // 投稿したコメントを表示する（仮の表示方法）
+    let commentList = document.getElementById("comment-list");
+    let listItem = document.createElement("li");
+    listItem.textContent = `${name}: ${comment}`;
+    commentList.appendChild(listItem);
+}
+
+// フォームの送信イベントリスナーを設定（コメントを投稿）
+document.getElementById("comment-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    postComment();
+});
