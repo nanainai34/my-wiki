@@ -1,48 +1,62 @@
-// コメントを表示する関数
-function displayComments() {
-    let comments = JSON.parse(localStorage.getItem("comments")) || [];
+// ページ読み込み時に投稿内容を表示する
+window.onload = function() {
+    displaySection("history");
+    displaySection("government");
+    displaySection("culture");
+    displayComments();
+};
 
-    let commentList = document.getElementById("comment-list");
-    commentList.innerHTML = ""; // 現在の内容をクリア
-
-    comments.forEach((comment, index) => {
-        let commentElement = document.createElement("li");
-        commentElement.classList.add("comment");
-
-        let nameElement = document.createElement("strong");
-        nameElement.textContent = comment.name + ": ";
-        commentElement.appendChild(nameElement);
-
-        let contentElement = document.createElement("span");
-        contentElement.textContent = comment.content;
-        commentElement.appendChild(contentElement);
-
-        commentList.appendChild(commentElement);
+// セクションを切り替える関数
+function displaySection(sectionId) {
+    let sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
     });
+    document.getElementById(sectionId).style.display = 'block';
 }
 
-// コメントを保存するための関数
-function saveComment() {
-    let name = document.getElementById("comment-name").value;
-    let content = document.getElementById("comment-content").value;
+// 投稿内容を保存する関数
+function saveComment(sectionId) {
+    let name = document.getElementById(sectionId + "-name").value;
+    let comment = document.getElementById(sectionId + "-comment").value;
 
-    // ローカルストレージに保存する場合の例
-    let comments = JSON.parse(localStorage.getItem("comments")) || [];
-    let comment = { name: name, content: content };
-    comments.push(comment);
-    localStorage.setItem("comments", JSON.stringify(comments));
+    let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
+    let newComment = { name: name, comment: comment };
+    comments.push(newComment);
+    localStorage.setItem(sectionId + "-comments", JSON.stringify(comments));
 
     // 表示更新
     displayComments();
 }
 
-// コメント投稿フォームにイベントリスナーを設定する
-document.getElementById("comment-form").addEventListener("submit", function(event) {
+// 投稿内容を表示する関数
+function displayComments() {
+    let commentList = document.getElementById("comment-list");
+    commentList.innerHTML = ""; // 現在の内容をクリア
+
+    // 各セクションのコメントを取得して表示
+    ["history", "government", "culture"].forEach(sectionId => {
+        let comments = JSON.parse(localStorage.getItem(sectionId + "-comments")) || [];
+        comments.forEach(comment => {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${comment.name}: ${comment.comment}`;
+            commentList.appendChild(listItem);
+        });
+    });
+}
+
+// フォームのコメント投稿ボタンにイベントリスナーを設定する
+document.getElementById("history-form").addEventListener("submit", function(event) {
     event.preventDefault();
-    saveComment();
+    saveComment("history");
 });
 
-// ページ読み込み時に投稿内容を表示する
-window.onload = function() {
-    displayComments();
-};
+document.getElementById("government-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    saveComment("government");
+});
+
+document.getElementById("culture-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    saveComment("culture");
+});
