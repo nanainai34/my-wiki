@@ -426,3 +426,66 @@ document.addEventListener("DOMContentLoaded", function() {
 
     loadComments();
 });
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to handle form submissions
+        function handleFormSubmit(event, panelId, nameId, commentId, storageKey) {
+            event.preventDefault();
+            const panel = document.getElementById(panelId);
+            const name = document.getElementById(nameId).value;
+            const comment = document.getElementById(commentId).value;
+
+            // Create a new comment element
+            const commentElement = document.createElement("div");
+            commentElement.className = "comment";
+            commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
+
+            // Append the new comment to the panel
+            panel.appendChild(commentElement);
+
+            // Save the comment to localStorage
+            const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            comments.push({ name: name, comment: comment });
+            localStorage.setItem(storageKey, JSON.stringify(comments));
+
+            // Clear the form inputs
+            document.getElementById(nameId).value = "";
+            document.getElementById(commentId).value = "";
+        }
+
+        // Function to load comments from localStorage
+        function loadComments(panelId, storageKey) {
+            const panel = document.getElementById(panelId);
+            const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            comments.forEach(({ name, comment }) => {
+                const commentElement = document.createElement("div");
+                commentElement.className = "comment";
+                commentElement.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
+                panel.appendChild(commentElement);
+            });
+        }
+
+        // Attach form submit event listeners
+        document.getElementById("history-form").addEventListener("submit", function(event) {
+            handleFormSubmit(event, "history-panel", "history-name", "history-comment", "historyComments");
+        });
+
+        document.getElementById("government-form").addEventListener("submit", function(event) {
+            handleFormSubmit(event, "government-panel", "government-name", "government-comment", "governmentComments");
+        });
+
+        document.getElementById("culture-form").addEventListener("submit", function(event) {
+            handleFormSubmit(event, "culture-panel", "culture-name", "culture-comment", "cultureComments");
+        });
+
+        document.getElementById("comment-form").addEventListener("submit", function(event) {
+            handleFormSubmit(event, "comment-list", "comment-name", "comment-content", "generalComments");
+        });
+
+        // Load comments from localStorage on page load
+        loadComments("history-panel", "historyComments");
+        loadComments("government-panel", "governmentComments");
+        loadComments("culture-panel", "cultureComments");
+        loadComments("comment-list", "generalComments");
+    });
+</script>
