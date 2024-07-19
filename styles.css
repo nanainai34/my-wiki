@@ -121,3 +121,14 @@ footer {
     max-width: 100%;
     height: auto;
 }
+/* コメントパネルのスタイル */
+#comments-panel, #history-panel, #government-panel, #culture-panel {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#comments-panel li, #history-panel li, #government-panel li, #culture-panel li {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
