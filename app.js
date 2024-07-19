@@ -32,7 +32,7 @@ function loadComments() {
 
 // コメントをサーバーに保存する関数
 function saveComment(section, name, comment) {
-    fetch(`http://localhost:3000/comments/${section}`, {
+    return fetch(`http://localhost:3000/comments/${section}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -58,8 +58,9 @@ function setupForm(form, panelId, section) {
         const name = form.querySelector('input[type="text"]').value;
         const comment = form.querySelector('textarea').value;
         addComment(document.getElementById(panelId), name, comment);
-        saveComment(section, name, comment);
-        form.reset(); // フォームをリセット
+        saveComment(section, name, comment).then(() => {
+            form.reset(); // フォームをリセット
+        });
     });
 }
 
@@ -70,4 +71,3 @@ setupForm(commentsForm, 'comments-panel', 'generalComments');
 
 // ページが読み込まれたときにコメントを読み込む
 window.addEventListener('load', loadComments);
-
