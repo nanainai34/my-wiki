@@ -7,8 +7,6 @@ const cultureForm = document.getElementById('culture-form');
 const culturePanel = document.getElementById('culture-panel');
 const commentsForm = document.getElementById('comments-form');
 const commentsPanel = document.getElementById('comments-panel');
-const photoForm = document.getElementById('photo-form');
-const photoGallery = document.getElementById('photo-gallery');
 
 // コメントを追加する関数
 function addComment(panel, name, comment) {
@@ -17,24 +15,35 @@ function addComment(panel, name, comment) {
     panel.appendChild(li);
 }
 
-// コメントをローカルストレージから読み込む関数
+// コメントをサーバーから読み込む関数
 function loadComments() {
-    const historyComments = JSON.parse(localStorage.getItem('historyComments')) || [];
-    const governmentComments = JSON.parse(localStorage.getItem('governmentComments')) || [];
-    const cultureComments = JSON.parse(localStorage.getItem('cultureComments')) || [];
-    const comments = JSON.parse(localStorage.getItem('comments')) || [];
-
-    historyComments.forEach(comment => addComment(historyPanel, comment.name, comment.comment));
-    governmentComments.forEach(comment => addComment(governmentPanel, comment.name, comment.comment));
-    cultureComments.forEach(comment => addComment(culturePanel, comment.name, comment.comment));
-    comments.forEach(comment => addComment(commentsPanel, comment.name, comment.comment));
+    const sections = ['historyComments', 'governmentComments', 'cultureComments', 'generalComments'];
+    sections.forEach(section => {
+        fetch(`http://localhost:3000/comments/${section}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(comment => addComment(document.getElementById(`${section.replace('Comments', 'panel')}`), comment.name, comment.comment));
+            });
+    });
 }
 
-// コメントをローカルストレージに保存する関数
+// コメントをサーバーに保存する関数
 function saveComment(section, name, comment) {
-    const existingComments = JSON.parse(localStorage.getItem(section)) || [];
-    existingComments.push({ name, comment });
-    localStorage.setItem(section, JSON.stringify(existingComments));
+    fetch(`http://localhost:3000/comments/${section}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Comment saved');
+        } else {
+            console.error('Error saving comment');
+        }
+    });
 }
 
 // 各フォームのサブミットイベントを処理
@@ -70,28 +79,8 @@ commentsForm.addEventListener('submit', function (e) {
     const name = document.getElementById('comments-name').value;
     const comment = document.getElementById('comments-comment').value;
     addComment(commentsPanel, name, comment);
-    saveComment('comments', name, comment);
+    saveComment('generalComments', name, comment);
     commentsForm.reset(); // フォームをリセット
-});
-
-// 写真アップロード処理
-photoForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const photoFile = document.getElementById('photo-file').files[0];
-    const photoName = document.getElementById('photo-name').value;
-
-    if (photoFile) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            const img = document.createElement('img');
-            img.src = event.target.result;
-            img.alt = photoName;
-            img.style.maxWidth = '200px';
-            img.style.margin = '10px';
-            photoGallery.appendChild(img);
-        };
-        reader.readAsDataURL(photoFile);
-    }
 });
 
 // ページが読み込まれたときにコメントを読み込む
