@@ -1,36 +1,37 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// SQLiteデータベースのセットアップ
-const db = new sqlite3.Database(':memory:');
-
-db.serialize(() => {
-    db.run("CREATE TABLE comments (name TEXT, content TEXT)");
-});
-
+app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
-app.get('/comments', (req, res) => {
-    db.all("SELECT rowid AS id, name, content FROM comments", (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        res.json(rows);
-    });
+let comments = {
+    historyComments: [],
+    governmentComments: [],
+    cultureComments: [],
+    generalComments: []
+};
+
+app.get('/comments/:section', (req, res) => {
+    const section = req.params.section;
+    res.json(comments[section] || []);
 });
 
-app.post('/comments', (req, res) => {
-    const { name, content } = req.body;
-    db.run("INSERT INTO comments (name, content) VALUES (?, ?)", [name, content], function (err) {
-        if (err) {
-            return console.error(err.message);
-        }
-        res.json({ id: this.lastID });
-    });
+app.post('/comments/:section', (req, res) => {
+    const section = req.params.section;
+    const { name, comment } = req.body;
+    if (comments[section]) {
+        comments[section].push({ name, comment });
+        res.status(201).json({ success: true });
+    } else {
+        res.status(400).json({ success: false, message: 'Invalid section' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
 });
 
 app.listen(port, () => {
