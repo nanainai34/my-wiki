@@ -1,14 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // セクションごとのコメントを保持するための変数
     const sections = ["history", "government", "culture", "comments"];
     const serverUrl = "http://localhost:3000";
 
-    // 各セクションのコメントを読み込み、表示する
     sections.forEach(section => {
         loadComments(section);
     });
 
-    // 各セクションのフォームにイベントリスナーを追加
     sections.forEach(section => {
         const form = document.getElementById(`${section}-form`);
         form.addEventListener("submit", (event) => {
@@ -20,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // コメントをサーバーに保存し、表示する関数
     function addComment(section, name, comment) {
         const commentData = { name, comment };
         fetch(`${serverUrl}/comments/${section}`, {
@@ -42,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // サーバーからコメントを読み込み、表示する関数
     function loadComments(section) {
         fetch(`${serverUrl}/comments/${section}`)
         .then(response => response.json())
@@ -54,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // コメントを表示する関数
     function displayComments(section, comments) {
         const panel = document.getElementById(`${section}-panel`);
         panel.innerHTML = "";
