@@ -1,73 +1,47 @@
-// コメントのフォームとパネルを取得
-const historyForm = document.getElementById('history-form');
-const historyPanel = document.getElementById('history-panel');
-const governmentForm = document.getElementById('government-form');
-const governmentPanel = document.getElementById('government-panel');
-const cultureForm = document.getElementById('culture-form');
-const culturePanel = document.getElementById('culture-panel');
-const commentsForm = document.getElementById('comments-form');
-const commentsPanel = document.getElementById('comments-panel');
+document.addEventListener("DOMContentLoaded", () => {
+    // セクションごとのコメントを保持するための変数
+    const sections = ["history", "government", "culture", "comments"];
 
-// コメントを追加する関数
-function addComment(panel, name, comment) {
-    const li = document.createElement('li');
-    li.textContent = `${name}: ${comment}`;
-    panel.appendChild(li);
-}
-
-// コメントをサーバーから読み込む関数
-function loadComments() {
-    const sections = ['historyComments', 'governmentComments', 'cultureComments', 'generalComments'];
+    // 各セクションのコメントを読み込み、表示する
     sections.forEach(section => {
-        fetch(`http://localhost:3000/comments/${section}`)
-            .then(response => response.json())
-            .then(data => {
-                const panel = document.getElementById(`${section.replace('Comments', 'panel')}`);
-                panel.innerHTML = ''; // 既存のコメントをクリア
-                data.forEach(comment => addComment(panel, comment.name, comment.comment));
-            })
-            .catch(error => console.error('コメントの読み込みに失敗しました:', error));
+        loadComments(section);
     });
-}
 
-// コメントをサーバーに保存する関数
-function saveComment(section, name, comment) {
-    return fetch(`http://localhost:3000/comments/${section}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, comment })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Comment saved');
-            loadComments(); // コメントを再ロードして表示
-        } else {
-            console.error('Error saving comment');
-        }
-    })
-    .catch(error => console.error('コメントの保存に失敗しました:', error));
-}
-
-// 各フォームのサブミットイベントを処理
-function setupForm(form, panelId, section) {
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const name = form.querySelector('input[type="text"]').value;
-        const comment = form.querySelector('textarea').value;
-        addComment(document.getElementById(panelId), name, comment);
-        saveComment(section, name, comment).then(() => {
-            form.reset(); // フォームをリセット
+    // 各セクションのフォームにイベントリスナーを追加
+    sections.forEach(section => {
+        const form = document.getElementById(`${section}-form`);
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const name = form.querySelector(`input[name="${section}-name"]`).value;
+            const comment = form.querySelector(`textarea[name="${section}-comment"]`).value;
+            addComment(section, name, comment);
+            form.reset();
         });
     });
-}
 
-setupForm(historyForm, 'history-panel', 'historyComments');
-setupForm(governmentForm, 'government-panel', 'governmentComments');
-setupForm(cultureForm, 'culture-panel', 'cultureComments');
-setupForm(commentsForm, 'comments-panel', 'generalComments');
+    // コメントをローカルストレージに保存し、表示する関数
+    function addComment(section, name, comment) {
+        const comments = JSON.parse(localStorage.getItem(section)) || [];
+        comments.push({ name, comment });
+        localStorage.setItem(section, JSON.stringify(comments));
+        displayComments(section, comments);
+    }
 
-// ページが読み込まれたときにコメントを読み込む
-window.addEventListener('load', loadComments);
+    // ローカルストレージからコメントを読み込み、表示する関数
+    function loadComments(section) {
+        const comments = JSON.parse(localStorage.getItem(section)) || [];
+        displayComments(section, comments);
+    }
+
+    // コメントを表示する関数
+    function displayComments(section, comments) {
+        const panel = document.getElementById(`${section}-panel`);
+        panel.innerHTML = "";
+        comments.forEach(comment => {
+            const commentElement = document.createElement("div");
+            commentElement.classList.add("comment");
+            commentElement.innerHTML = `<strong>${comment.name}</strong><p>${comment.comment}</p>`;
+            panel.appendChild(commentElement);
+        });
+    }
+});
