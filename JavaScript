@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sections = ['history', 'government', 'culture', 'comments'];
+    const sections = ['history', 'government', 'culture'];
 
     sections.forEach(section => {
         loadComments(section);
@@ -7,23 +7,31 @@ document.addEventListener('DOMContentLoaded', function() {
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                addComment(section);
+                try {
+                    addComment(section);
+                } catch (error) {
+                    console.error(`Error adding comment to section: ${section}`, error);
+                }
             });
         }
     });
 });
 
 function loadComments(section) {
-    const panel = document.getElementById(`${section}-panel`);
-    if (panel) {
-        panel.innerHTML = '';
-        const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-        comments.forEach(comment => {
-            const commentElement = document.createElement('div');
-            commentElement.classList.add('comment');
-            commentElement.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
-            panel.appendChild(commentElement);
-        });
+    try {
+        const panel = document.getElementById(`${section}-panel`);
+        if (panel) {
+            panel.innerHTML = '';
+            const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment');
+                commentElement.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
+                panel.appendChild(commentElement);
+            });
+        }
+    } catch (error) {
+        console.error(`Error loading comments for section: ${section}`, error);
     }
 }
 
@@ -37,13 +45,17 @@ function addComment(section) {
 
     if (!name || !text) return;
 
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.push({ name, text });
-    localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
+    try {
+        const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
+        comments.push({ name, text });
+        localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
 
-    nameInput.value = '';
-    commentInput.value = '';
+        nameInput.value = '';
+        commentInput.value = '';
 
-    loadComments(section);
-    console.log(`Comment added to section: ${section}`);
+        loadComments(section);
+        console.log(`Comment added to section: ${section}`);
+    } catch (error) {
+        console.error(`Error adding comment to section: ${section}`, error);
+    }
 }
