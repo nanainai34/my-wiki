@@ -14,8 +14,12 @@ body {
 header {
     background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
     color: white; /* テキストの色を白に設定 */
-    padding: 20px;
+    padding: 1rem 0;
     text-align: center;
+}
+
+header h1 {
+    margin: 0;
 }
 
 /* ナビゲーションのスタイル */
@@ -46,7 +50,7 @@ nav ul li a:hover {
 
 /* メインコンテンツのスタイル */
 main {
-    padding: 20px;
+    padding: 2rem;
     background-color: rgba(255, 255, 255, 0.8); /* 半透明の白背景 */
 }
 
@@ -56,7 +60,7 @@ main {
 }
 
 .panel {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     padding: 1rem;
     margin-bottom: 1rem;
     background-color: #f9f9f9;
@@ -98,7 +102,7 @@ footer {
     background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
     color: white; /* テキストの色を白に設定 */
     text-align: center;
-    padding: 1rem;
+    padding: 1rem 0;
     position: fixed;
     width: 100%;
     bottom: 0;
@@ -129,83 +133,3 @@ footer {
     max-width: 100%;
     height: auto;
 }
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-main {
-    padding: 2rem;
-}
-
-.content-section {
-    margin-bottom: 2rem;
-}
-
-.panel {
-    border: 1px solid #ddd;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-form {
-    margin-top: 1rem;
-}
-
-form label {
-    display: block;
-    margin-top: 0.5rem;
-}
-
-form input, form textarea {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.2rem;
-}
-
-form button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-form button:hover {
-    background: #555;
-}
-
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-}
-
