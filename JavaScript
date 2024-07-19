@@ -1,3 +1,20 @@
+// コメントのフォームとパネルを取得
+const historyForm = document.getElementById('history-form');
+const historyPanel = document.getElementById('history-panel');
+const governmentForm = document.getElementById('government-form');
+const governmentPanel = document.getElementById('government-panel');
+const cultureForm = document.getElementById('culture-form');
+const culturePanel = document.getElementById('culture-panel');
+const commentsForm = document.getElementById('comments-form');
+const commentsPanel = document.getElementById('comments-panel');
+
+// コメントを追加する関数
+function addComment(panel, name, comment) {
+    const li = document.createElement('li');
+    li.textContent = `${name}: ${comment}`;
+    panel.appendChild(li);
+}
+
 // コメントをサーバーから読み込む関数
 function loadComments() {
     const sections = ['historyComments', 'governmentComments', 'cultureComments', 'generalComments'];
@@ -7,9 +24,7 @@ function loadComments() {
             .then(data => {
                 const panel = document.getElementById(`${section.replace('Comments', 'panel')}`);
                 panel.innerHTML = ''; // 既存のコメントをクリア
-                data.forEach(comment => {
-                    addComment(panel, comment.name, comment.comment);
-                });
+                data.forEach(comment => addComment(panel, comment.name, comment.comment));
             })
             .catch(error => console.error('コメントの読み込みに失敗しました:', error));
     });
@@ -27,9 +42,9 @@ function saveComment(section, name, comment) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Comment saved');
+            console.log('コメントが保存されました');
         } else {
-            console.error('Error saving comment');
+            console.error('コメントの保存に失敗しました');
         }
     })
     .catch(error => console.error('コメントの保存に失敗しました:', error));
