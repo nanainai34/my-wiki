@@ -1,88 +1,43 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>コメント機能</title>
-</head>
-<body>
-    <h1>コメント機能</h1>
-    <div id="comments"></div>
-    <form id="comment-form">
-        <label for="comment-name">名前:</label>
-        <input type="text" id="comment-name" name="comment-name" required>
-        <label for="comment-content">コメント:</label>
-        <textarea id="comment-content" name="comment-content" rows="4" required></textarea>
-        <button type="submit">投稿する</button>
-    </form>
-
-    <script>
-        function loadComments() {
-            const comments = JSON.parse(localStorage.getItem('comments')) || [];
-            const commentDiv = document.getElementById('comments');
-            commentDiv.innerHTML = '';
-            comments.forEach(comment => {
-                const div = document.createElement('div');
-                div.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
-                commentDiv.appendChild(div);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', loadComments);
-
-        document.getElementById('comment-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('comment-name').value;
-            const content = document.getElementById('comment-content').value;
-
-            const comments = JSON.parse(localStorage.getItem('comments')) || [];
-            comments.push({ name, content });
-            localStorage.setItem('comments', JSON.stringify(comments));
-
-            document.getElementById('comment-name').value = '';
-            document.getElementById('comment-content').value = '';
-            loadComments();
-        });
-// ローカルストレージからコメントを読み込んで表示する関数
-function loadComments(section) {
-    const comments = JSON.parse(localStorage.getItem(section)) || [];
-    const commentList = document.getElementById(`${section}-panel`);
-    commentList.innerHTML = '';
-    comments.forEach(comment => {
-        const div = document.createElement('div');
-        div.className = 'comment';
-        div.innerHTML = `<strong>${comment.name}:</strong> ${comment.content}`;
-        commentList.appendChild(div);
-    });
-}
-
-// コメントを保存する関数
-function saveComment(section, name, content) {
-    const comments = JSON.parse(localStorage.getItem(section)) || [];
-    comments.push({ name, content });
-    localStorage.setItem(section, JSON.stringify(comments));
-}
-
-// 各セクションのフォームにイベントリスナーを追加
-['history', 'government', 'culture', 'comments'].forEach(section => {
-    document.getElementById(`${section}-form`).addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById(`${section}-name`).value;
-        const content = document.getElementById(`${section}-comment`).value;
-        saveComment(section, name, content);
-        document.getElementById(`${section}-name`).value = '';
-        document.getElementById(`${section}-comment`).value = '';
-        loadComments(section);
-    });
-});
-
-// 初期化時に各セクションのコメントを読み込む
 document.addEventListener('DOMContentLoaded', function() {
-    ['history', 'government', 'culture', 'comments'].forEach(section => {
+    const sections = ['history', 'government', 'culture'];
+
+    sections.forEach(section => {
         loadComments(section);
+        document.getElementById(`${section}-form`).addEventListener('submit', function(e) {
+            e.preventDefault();
+            addComment(section);
+        });
     });
 });
 
-    </script>
-</body>
-</html>
+function loadComments(section) {
+    const panel = document.getElementById(`${section}-panel`);
+    panel.innerHTML = '';
+
+    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
+    comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
+        panel.appendChild(commentElement);
+    });
+}
+
+function addComment(section) {
+    const nameInput = document.getElementById(`${section}-name`);
+    const commentInput = document.getElementById(`${section}-comment`);
+
+    const name = nameInput.value;
+    const text = commentInput.value;
+
+    if (!name || !text) return;
+
+    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
+    comments.push({ name, text });
+    localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
+
+    nameInput.value = '';
+    commentInput.value = '';
+
+    loadComments(section);
+}
