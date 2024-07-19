@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // セクションごとのコメントを保持するための変数
     const sections = ["history", "government", "culture", "comments"];
+    const serverUrl = "http://localhost:3000";
 
     // 各セクションのコメントを読み込み、表示する
     sections.forEach(section => {
@@ -19,18 +20,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // コメントをローカルストレージに保存し、表示する関数
+    // コメントをサーバーに保存し、表示する関数
     function addComment(section, name, comment) {
-        const comments = JSON.parse(localStorage.getItem(section)) || [];
-        comments.push({ name, comment });
-        localStorage.setItem(section, JSON.stringify(comments));
-        displayComments(section, comments);
+        const commentData = { name, comment };
+        fetch(`${serverUrl}/comments/${section}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(commentData)
+        })
+        .then(response => {
+            if (response.ok) {
+                loadComments(section);
+            } else {
+                console.error("Failed to add comment");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
     }
 
-    // ローカルストレージからコメントを読み込み、表示する関数
+    // サーバーからコメントを読み込み、表示する関数
     function loadComments(section) {
-        const comments = JSON.parse(localStorage.getItem(section)) || [];
-        displayComments(section, comments);
+        fetch(`${serverUrl}/comments/${section}`)
+        .then(response => response.json())
+        .then(comments => {
+            displayComments(section, comments);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
     }
 
     // コメントを表示する関数
