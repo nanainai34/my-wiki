@@ -1,5 +1,3 @@
-/* styles.css */
-
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -71,6 +69,8 @@ input[type="text"], textarea {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 button {
@@ -79,6 +79,7 @@ button {
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 button:hover {
@@ -96,19 +97,27 @@ footer {
 }
 
 /* コメントパネルのスタイル */
-#comment-list {
+#comments-panel {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#comment-list li {
+#comments-panel li {
     border-bottom: 1px solid #ddd;
     padding: 5px 0;
 }
 
 /* ギャラリー画像のスタイル */
+#photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 #photo-gallery img {
     margin: 10px;
     border: 1px solid #ddd;
+    max-width: 100%;
+    height: auto;
 }
