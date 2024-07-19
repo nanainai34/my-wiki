@@ -1,110 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sections = ['history', 'government', 'culture'];
-
-    sections.forEach(section => {
-        loadComments(section);
-        document.getElementById(`${section}-form`).addEventListener('submit', function(e) {
-            e.preventDefault();
-            addComment(section);
-        });
-    });
-});
-
-function loadComments(section) {
-    const panel = document.getElementById(`${section}-panel`);
-    panel.innerHTML = '';
-
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.forEach(comment => {
-        const commentElement = document.createElement('div');
-        commentElement.classList.add('comment');
-        commentElement.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
-        panel.appendChild(commentElement);
-    });
-}
-
-function addComment(section) {
-    const nameInput = document.getElementById(`${section}-name`);
-    const commentInput = document.getElementById(`${section}-comment`);
-
-    const name = nameInput.value;
-    const text = commentInput.value;
-
-    if (!name || !text) return;
-
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.push({ name, text });
-    localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
-
-    nameInput.value = '';
-    commentInput.value = '';
-
-    loadComments(section);
-}
-document.addEventListener('DOMContentLoaded', function() {
-    const sections = ['history', 'government', 'culture'];
-
-    sections.forEach(section => {
-        loadComments(section);
-        document.getElementById(`${section}-form`).addEventListener('submit', function(e) {
-            e.preventDefault();
-            addComment(section);
-        });
-    });
-});
-
-function loadComments(section) {
-    const panel = document.getElementById(`${section}-panel`);
-    panel.innerHTML = '';
-
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.forEach(comment => {
-        const commentElement = document.createElement('div');
-        commentElement.classList.add('comment');
-        commentElement.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
-        panel.appendChild(commentElement);
-    });
-}
-
-function addComment(section) {
-    const nameInput = document.getElementById(`${section}-name`);
-    const commentInput = document.getElementById(`${section}-comment`);
-
-    const name = nameInput.value;
-    const text = commentInput.value;
-
-    if (!name || !text) return;
-
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.push({ name, text });
-    localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
-
-    nameInput.value = '';
-    commentInput.value = '';
-
-    loadComments(section);
-}
-function addComment(section) {
-    console.log(`Adding comment to section: ${section}`);
-    const nameInput = document.getElementById(`${section}-name`);
-    const commentInput = document.getElementById(`${section}-comment`);
-
-    const name = nameInput.value;
-    const text = commentInput.value;
-
-    if (!name || !text) return;
-
-    const comments = JSON.parse(localStorage.getItem(`${section}-comments`)) || [];
-    comments.push({ name, text });
-    localStorage.setItem(`${section}-comments`, JSON.stringify(comments));
-
-    nameInput.value = '';
-    commentInput.value = '';
-
-    loadComments(section);
-    console.log(`Comment added to section: ${section}`);
-}
-document.addEventListener('DOMContentLoaded', function() {
     const sections = ['history', 'government', 'culture', 'comments'];
 
     sections.forEach(section => {
@@ -134,6 +28,7 @@ function loadComments(section) {
 }
 
 function addComment(section) {
+    console.log(`Adding comment to section: ${section}`);
     const nameInput = document.getElementById(`${section}-name`);
     const commentInput = document.getElementById(`${section}-comment`);
 
@@ -150,4 +45,5 @@ function addComment(section) {
     commentInput.value = '';
 
     loadComments(section);
+    console.log(`Comment added to section: ${section}`);
 }
