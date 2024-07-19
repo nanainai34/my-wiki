@@ -22,8 +22,11 @@ function loadComments() {
         fetch(`http://localhost:3000/comments/${section}`)
             .then(response => response.json())
             .then(data => {
-                data.forEach(comment => addComment(document.getElementById(`${section.replace('Comments', 'panel')}`), comment.name, comment.comment));
-            });
+                const panel = document.getElementById(`${section.replace('Comments', 'panel')}`);
+                panel.innerHTML = ''; // 既存のコメントをクリア
+                data.forEach(comment => addComment(panel, comment.name, comment.comment));
+            })
+            .catch(error => console.error('コメントの読み込みに失敗しました:', error));
     });
 }
 
@@ -40,48 +43,31 @@ function saveComment(section, name, comment) {
     .then(data => {
         if (data.success) {
             console.log('Comment saved');
+            loadComments(); // コメントを再ロードして表示
         } else {
             console.error('Error saving comment');
         }
-    });
+    })
+    .catch(error => console.error('コメントの保存に失敗しました:', error));
 }
 
 // 各フォームのサブミットイベントを処理
-historyForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = document.getElementById('history-name').value;
-    const comment = document.getElementById('history-comment').value;
-    addComment(historyPanel, name, comment);
-    saveComment('historyComments', name, comment);
-    historyForm.reset(); // フォームをリセット
-});
+function setupForm(form, panelId, section) {
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = form.querySelector('input[type="text"]').value;
+        const comment = form.querySelector('textarea').value;
+        addComment(document.getElementById(panelId), name, comment);
+        saveComment(section, name, comment);
+        form.reset(); // フォームをリセット
+    });
+}
 
-governmentForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = document.getElementById('government-name').value;
-    const comment = document.getElementById('government-comment').value;
-    addComment(governmentPanel, name, comment);
-    saveComment('governmentComments', name, comment);
-    governmentForm.reset(); // フォームをリセット
-});
-
-cultureForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = document.getElementById('culture-name').value;
-    const comment = document.getElementById('culture-comment').value;
-    addComment(culturePanel, name, comment);
-    saveComment('cultureComments', name, comment);
-    cultureForm.reset(); // フォームをリセット
-});
-
-commentsForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = document.getElementById('comments-name').value;
-    const comment = document.getElementById('comments-comment').value;
-    addComment(commentsPanel, name, comment);
-    saveComment('generalComments', name, comment);
-    commentsForm.reset(); // フォームをリセット
-});
+setupForm(historyForm, 'history-panel', 'historyComments');
+setupForm(governmentForm, 'government-panel', 'governmentComments');
+setupForm(cultureForm, 'culture-panel', 'cultureComments');
+setupForm(commentsForm, 'comments-panel', 'generalComments');
 
 // ページが読み込まれたときにコメントを読み込む
 window.addEventListener('load', loadComments);
+
